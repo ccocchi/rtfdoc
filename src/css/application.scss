@@ -1,0 +1,280 @@
+:root {
+--sail-gray50: #f7fafc;
+
+--sail-gray100: #e3e8ee;
+
+--sail-gray200: #c1c9d2;
+
+--sail-gray300: #a3acb9;
+
+--sail-gray400: #8792a2;
+
+--sail-gray500: #697386;
+
+--sail-gray600: #4f566b;
+
+--sail-gray700: #3c4257;
+
+--sail-gray800: #2a2f45;
+
+--sail-gray900: #1a1f36;
+
+--sail-blue50: #f5fbff;
+
+--sail-blue100: #d6ecff;
+
+--sail-blue200: #a4cdfe;
+
+--sail-blue300: #7dabf8;
+
+--sail-blue400: #6c8eef;
+
+--sail-blue500: #556cd6;
+
+--sail-blue600: #3d4eac;
+
+--sail-blue700: #2f3d89;
+
+--sail-blue800: #212d63;
+
+--sail-blue900: #131f41;
+
+--sail-cyan50: #edfdfd;
+
+--sail-cyan100: #c4f1f9;
+
+--sail-cyan200: #7fd3ed;
+
+--sail-cyan300: #4db7e8;
+
+--sail-cyan400: #3a97d4;
+
+--sail-cyan500: #067ab8;
+
+--sail-cyan600: #075996;
+
+--sail-cyan700: #06457a;
+
+--sail-cyan800: #093353;
+
+--sail-cyan900: #042235;
+
+--sail-green50: #efffed;
+
+--sail-green100: #cbf4c9;
+
+--sail-green200: #85d996;
+
+--sail-green300: #33c27f;
+
+--sail-green400: #1ea672;
+
+--sail-green500: #09825d;
+
+--sail-green600: #0e6245;
+
+--sail-green700: #0d4b3b;
+
+--sail-green800: #0b3733;
+
+--sail-green900: #082429;
+
+--sail-yellow50: #fcf9e9;
+
+--sail-yellow100: #f8e5b9;
+
+--sail-yellow200: #efc078;
+
+--sail-yellow300: #e5993e;
+
+--sail-yellow400: #d97917;
+
+--sail-yellow500: #bb5504;
+
+--sail-yellow600: #983705;
+
+--sail-yellow700: #762b0b;
+
+--sail-yellow800: #571f0d;
+
+--sail-yellow900: #3a1607;
+
+--sail-orange50: #fffaee;
+
+--sail-orange100: #fee3c0;
+
+--sail-orange200: #f8b886;
+
+--sail-orange300: #f5925e;
+
+--sail-orange400: #e56f4a;
+
+--sail-orange500: #c44c34;
+
+--sail-orange600: #9e2f28;
+
+--sail-orange700: #7e1e23;
+
+--sail-orange800: #5d161b;
+
+--sail-orange900: #420e11;
+
+--sail-red50: #fff8f5;
+
+--sail-red100: #fde2dd;
+
+--sail-red200: #fbb5b2;
+
+--sail-red300: #fa8389;
+
+--sail-red400: #ed5f74;
+
+--sail-red500: #cd3d64;
+
+--sail-red600: #a41c4e;
+
+--sail-red700: #80143f;
+
+--sail-red800: #5e1039;
+
+--sail-red900: #420828;
+
+--sail-purple50: #fff8fe;
+
+--sail-purple100: #fce0f6;
+
+--sail-purple200: #f0b4e4;
+
+--sail-purple300: #e28ddc;
+
+--sail-purple400: #c96ed0;
+
+--sail-purple500: #a450b5;
+
+--sail-purple600: #7b3997;
+
+--sail-purple700: #5b2b80;
+
+--sail-purple800: #401d6a;
+
+--sail-purple900: #2d0f55;
+
+--sail-violet50: #f8f9fe;
+
+--sail-violet100: #e6e6fc;
+
+--sail-violet200: #c7c2ea;
+
+--sail-violet300: #b0a1e1;
+
+--sail-violet400: #9c82db;
+
+--sail-violet500: #8260c3;
+
+--sail-violet600: #61469b;
+
+--sail-violet700: #4b3480;
+
+--sail-violet800: #352465;
+
+--sail-violet900: #1f184e;
+
+--sidebar-width: 220px;
+
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, "BlinkMacSystemFont", "Segoe UI", "Roboto", Helvetica, Arial, sans-serif;
+}
+
+body[data-theme="dark"] {
+  background-color: var(--sail-gray900);
+}
+
+body[data-theme="light"] {
+  --sail-gray50: var(--sailgray900);
+  background-color: var(--sail-gray50);
+}
+
+#sidebar {
+  width: var(--sidebar-width);
+  height: 100%;
+}
+
+.sidebar-header {
+  color: var(--sail-gray50);
+  padding: 16px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  .sidebar-title {
+    font-size: 15px;
+    line-height: 20px;
+  }
+
+  .api {
+    text-transform: uppercase;
+    color: var(--sail-cyan500);
+  }
+}
+
+/*Simple css to style it like a toggle switch*/
+.theme-switch-wrapper {
+  display: flex;
+  align-items: center;
+  height: 20px;
+
+  .theme-switch {
+    display: inline-block;
+    height: 20px;
+    position: relative;
+    width: 40px;
+  }
+
+  .theme-switch input {
+    display:none;
+  }
+
+  .slider {
+    background-color: #ccc;
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 4px;
+    height: 14px;
+    transition: .4s;
+  }
+
+  .slider:before {
+    background-color: #fff;
+    bottom: -2px;
+    content: "";
+    height: 18px;
+    left: 0;
+    box-shadow: 0 0 0 1px rgba(0,0,0,.07), 0 1px 3px 0 rgba(59,65,94,.1);
+    position: absolute;
+    transition: .4s;
+    width: 18px;
+  }
+
+  input:checked + .slider {
+    background-color: var(--sail-blue700);
+  }
+
+  input:checked + .slider:before {
+    transform: translateX(20px);
+  }
+
+  .slider.round {
+    border-radius: 20px;
+  }
+
+  .slider.round:before {
+    border-radius: 50%;
+  }
+}
