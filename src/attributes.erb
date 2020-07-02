@@ -1,0 +1,44 @@
+<div class="section-list">
+  <h5 class="section-list-title">Attributes</h5>
+  <ul>
+    <% @attributes.each do |name, hash| %>
+    <li class="list-item">
+      <div class="list-item-label">
+        <div class="list-item-name"><%= name %></div>
+        <div class="list-item-type"><%= hash['type'] %> </div>
+      </div>
+      <div class="list-item-description">
+        <p><%= hash['desc'] %></p>
+      </div>
+      <% if hash['children']&.any? %>
+        <div class="section-list section-list-child">
+          <h5
+            class="section-list-title section-list-title-child"
+            data-content="Hide child attributes"
+          >
+            <span class="svg-icon svg-plus">
+              <svg height="32" style="height: 10px; width: 10px;" version="1.1" viewBox="0 0 32 32" width="32px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+                <path d="M28,14H18V4c0-1.104-0.896-2-2-2s-2,0.896-2,2v10H4c-1.104,0-2,0.896-2,2s0.896,2,2,2h10v10c0,1.104,0.896,2,2,2  s2-0.896,2-2V18h10c1.104,0,2-0.896,2-2S29.104,14,28,14z"/>
+              </svg>
+            </span>
+            <span>Show child attributes</span>
+          </h5>
+          <ul class="child-list hidden">
+            <% hash['children'].each do |child_name, child_hash| %>
+              <li class="list-item">
+                <div class="list-item-label">
+                  <div class="list-item-name"><%= name %></div>
+                  <div class="list-item-type"><%= hash['type'] %> </div>
+                </div>
+                <div class="list-item-description">
+                  <p><%= hash['desc'] %></p>
+                </div>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+    </li>
+    <% end %>
+  </ul>
+</div>

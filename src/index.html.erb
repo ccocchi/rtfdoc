@@ -1,0 +1,75 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+  <meta charset="utf-8">
+  <title>RTFDoc</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="application.css">
+</head>
+<body data-theme="dark">
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">
+        odyssey <span class="api">api</span>
+      </div>
+      <div class="theme-switch-wrapper">
+        <div class="theme-switch">
+          <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" checked="checked" />
+            <div class="slider round"></div>
+          </label>
+        </div>
+      </div>
+    </div>
+    <nav class="sidebar-nav" role="navigation"></nav>
+  </div>
+  <div id="content" class="content-area">
+    <div class="top-nav" style="height: 150px"></div>
+    <%= @content %>
+  </div>
+  <script async type="text/javascript">
+    const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
+    const body = document.querySelector('body');
+
+    function switchTheme(e) {
+      if (e.target.checked) {
+        body.setAttribute('data-theme', 'dark');
+      } else {
+        body.setAttribute('data-theme', 'light');
+      }
+    }
+
+    toggleSwitch.addEventListener('change', switchTheme, false);
+
+
+    function toggleChildList(e) {
+      const target = e.currentTarget;
+      const newContent = target.getAttribute('data-content');
+
+      // Retrieve the <span> containing the text
+      const textNode = target.lastElementChild
+
+      // Change button element
+      target.setAttribute('data-content', textNode.innerText);
+      textNode.innerText = newContent;
+      target.classList.toggle('child-revealed');
+
+      // Toggle child list
+      const list = target.nextElementSibling;
+      list.classList.toggle('hidden');
+
+      // Toggle list <div> as shown
+      const parent = target.parentElement;
+      parent.classList.toggle('list-shown');
+    }
+
+    const childListButtons = document.querySelectorAll('.section-list-title-child');
+    childListButtons.forEach(b => {
+      b.addEventListener('click', toggleChildList, true)
+    })
+
+  </script>
+</body>
+</html>
