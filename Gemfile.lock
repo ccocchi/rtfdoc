@@ -1,0 +1,19 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    benchmark-ips (2.8.2)
+    erubi (1.9.0)
+    redcarpet (3.5.0)
+    rouge (3.20.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  benchmark-ips
+  erubi
+  redcarpet
+  rouge
+
+BUNDLED WITH
+   1.17.3
