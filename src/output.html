@@ -7,6 +7,19 @@
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="application.css">
+  <style type="text/css" media="all">
+    code, code .w {
+      color: var(--sail-gray300);
+    }
+
+    code .s2 {
+      color: var(--sail-green500);
+    }
+
+    code .kc {
+      color: var(--sail-orange500);
+    }
+  </style>
 </head>
 <body data-theme="dark">
   <div id="sidebar" class="sidebar">
@@ -26,15 +39,12 @@
     <nav class="sidebar-nav" role="navigation"></nav>
   </div>
   <div id="content" class="content-area">
-    <div class="top-nav" style="height: 150px"></div>
+    <div class="top-nav" style="height: 50px"></div>
     <section id="introduction" class="head-section">
-          <div class="section-divider"></div>
-          <div class="section-area">
-            <div class="section-body"><!-- ---
-id: introduction
-menu_title: Introduction
---- -->
-<p class="intro">
+  <div class="section-divider"></div>
+  <div class="section-area">
+    <div class="section-body">
+      <p class="intro">
 The Stripe API is organized around REST. Our API has predictable resource-oriented URLs, accepts form-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.
 </p>
 
@@ -85,10 +95,41 @@ The Stripe API is organized around REST. Our API has predictable resource-orient
     </li>
   </ul>
 </div>
-</div>
+
+    </div>
+    <div class="section-example">
+              <div class="section-response">
+          <div class="response-topbar">RESPONSE</div>
+          <pre><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mandate_1H0E6T2eZvKYlo2Cy4ALkgmZ"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"object"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mandate"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"customer_acceptance"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"accepted_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">123456789</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"online"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"ip_address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"127.0.0.0"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"user_agent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"device"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"online"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"livemode"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"multi_use"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+  </span><span class="nl">"payment_method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pm_123456789"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"payment_method_details"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"sepa_debit"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"reference"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123456789"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sepa_debit"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"multi_use"</span><span class="w">
+</span><span class="p">}</span></code></pre>
         </div>
-        <div class="section-example"></div>
-      </section>
+
+    </div>
+  </div>
+</section>
+
   </div>
   <script async type="text/javascript">
     const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
