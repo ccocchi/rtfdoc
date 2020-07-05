@@ -7,6 +7,19 @@
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="application.css">
+  <style type="text/css" media="all">
+    code, code .w {
+      color: var(--sail-gray300);
+    }
+
+    code .s2 {
+      color: var(--sail-green500);
+    }
+
+    code .kc {
+      color: var(--sail-orange500);
+    }
+  </style>
 </head>
 <body data-theme="dark">
   <div id="sidebar" class="sidebar">
@@ -26,7 +39,7 @@
     <nav class="sidebar-nav" role="navigation"></nav>
   </div>
   <div id="content" class="content-area">
-    <div class="top-nav" style="height: 150px"></div>
+    <div class="top-nav" style="height: 50px"></div>
     <%= @content %>
   </div>
   <script async type="text/javascript">

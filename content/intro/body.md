@@ -1,7 +1,7 @@
-<!-- ---
+---
 id: introduction
 menu_title: Introduction
---- -->
+---
 
 # Introduction
 
@@ -24,6 +24,31 @@ address:
         desc: english name of the city
 ```
 
+$$$
+
 ```response
-A sample test API key is included in all the examples here, so you can test any example right away.
+{
+  "id": "mandate_1H0E6T2eZvKYlo2Cy4ALkgmZ",
+  "object": "mandate",
+  "customer_acceptance": {
+    "accepted_at": 123456789,
+    "online": {
+      "ip_address": "127.0.0.0",
+      "user_agent": "device"
+    },
+    "type": "online"
+  },
+  "livemode": false,
+  "multi_use": {},
+  "payment_method": "pm_123456789",
+  "payment_method_details": {
+    "sepa_debit": {
+      "reference": "123456789",
+      "url": ""
+    },
+    "type": "sepa_debit"
+  },
+  "status": "active",
+  "type": "multi_use"
+}
 ```
