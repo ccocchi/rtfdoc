@@ -95,7 +95,8 @@
   --example-width: 40vw;
   --sp20: 20px;
   --sp24: 24px;
-  --monospace-font: "SFMono-Regular", "Consolas", "Menlo", monospace; }
+  --monospace-font: "SFMono-Regular", "Consolas", "Menlo", monospace;
+  --font-size-main: 16px; }
 
 * {
   box-sizing: border-box;
@@ -137,6 +138,19 @@ body[data-theme="light"] {
   .sidebar-header .api {
     text-transform: uppercase;
     color: var(--sail-cyan500); }
+
+.sidebar-nav {
+  margin-top: 16px; }
+  .sidebar-nav a {
+    text-decoration: none;
+    color: var(--sail-gray300);
+    transition: color .2s ease;
+    text-transform: capitalize;
+    font-size: 16px;
+    display: block;
+    padding: 5px 16px; }
+    .sidebar-nav a:hover {
+      color: var(--sail-gray50); }
 
 /*Simple css to style it like a toggle switch*/
 .theme-switch-wrapper {
@@ -224,10 +238,16 @@ section:first-of-type .section-divider {
 
 p {
   margin-top: var(--sp20);
-  font-size: 14px;
-  line-height: 22px;
+  font-size: var(--font-size-main);
+  line-height: 24px;
+  font-weight: 400;
   color: var(--sail-gray200);
   --moz-osx-font-smoothing: grayscale; }
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0; }
 
 .hidden {
   display: none; }
@@ -240,7 +260,7 @@ p {
   margin: 0; }
 .section-body p.intro {
   font-size: 16px;
-  line-height: 26px;
+  line-height: 22px;
   font-weight: 400;
   margin-top: 24px; }
 
@@ -280,10 +300,6 @@ p {
     margin: 0;
     margin-top: var(--sp20);
     width: 100%; }
-  .section-list ul {
-    list-style: none;
-    margin: 0;
-    padding: 0; }
   .section-list .list-item {
     padding-top: 16px;
     padding-bottom: 15px;
