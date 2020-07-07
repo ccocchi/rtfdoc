@@ -37,6 +37,10 @@ module RTFDoc
       "<p>#{text}</p>"
     end
 
+    def header(text, level)
+      "<h#{level}>#{text}</h#{level}>"
+    end
+
     def block_html(raw_html)
       raw_html
     end
@@ -56,8 +60,9 @@ module RTFDoc
   end
 
   class Template
-    def initialize(content)
-      @content = content
+    def initialize(sections)
+      @content = sections.map(&:output).join
+      @menu_content = sections.map(&:menu_output).join
     end
 
     def output
@@ -68,6 +73,8 @@ module RTFDoc
 
   class Section
     include Renderable
+
+    attr_reader :id, :menu_title
 
     def initialize(raw_content, filename, renderer)
       if raw_content.start_with?('---')
@@ -98,17 +105,26 @@ module RTFDoc
       define_method(:output) { #{template.src} }
     RUBY
 
+    def menu_output
+      %(<li><a href="##{id}">#{menu_title}</a></li>)
+    end
+
     private
 
     def parse_metadata(filename)
       if defined?(@metadata)
         meta    = YAML.load(@metadata)
         @id     = meta['id']
-        @title  = meta['title']
+        @menu_title  = meta['menu_title']
       else
-        @id = @title = filename
+        @id = @menu_title = filename
       end
     end
+  end
+
+  def self.extract_filename(str)
+    i = str.rindex('/')
+    str.slice(i + 1, str.length - i - 4)
   end
 
   def self.generate
@@ -120,12 +136,18 @@ module RTFDoc
       no_intra_emphasis:    true
     })
 
-    text    = File.read('content/intro/body.md')
-    section = Section.new(text, nil, markdown)
-    content = section.output
+    config = YAML.load_file('content/config.yml')
+
+    hash = Dir.glob('content/**/*.md').each_with_object({}) do |path, res|
+      filename  = extract_filename(path)
+      text      = File.read(path)
+      res[filename] = Section.new(text, filename, markdown)
+    end
+
+    sections = hash.values_at *config['resources']
 
     out     = File.new(File.expand_path('../src/output.html', __dir__), 'w')
-    out.write(Template.new(content).output)
+    out.write(Template.new(sections).output)
     out.close
   end
 end
