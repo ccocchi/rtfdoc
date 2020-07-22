@@ -32,38 +32,68 @@ require 'benchmark/ips'
 # end
 
 
-str = 'content/intro/example.md'
+# str = 'content/intro/example.md'
+#
+# def meth1(str)
+#   str.split('/').last.split('.').first
+# end
+#
+# def meth2(str)
+#   str.split('/').last.slice(0..-4)
+# end
+#
+# def meth3(str)
+#   i = str.rindex('/')
+#   str.slice(i + 1..-4)
+# end
+#
+# def meth4(str)
+#   /(?<name>\w+)\.md\Z/.match(str)[:name]
+# end
+#
+# def meth5(str)
+#   i = str.rindex('/')
+#   str.slice(i + 1, str.length - i - 4)
+# end
+#
+# puts meth5(str)
+#
+# Benchmark.ips do |x|
+#   x.report('meth1') { meth1(str) }
+#   x.report('meth2') { meth2(str) }
+#   x.report('meth3') { meth3(str) }
+#   x.report('meth4') { meth4(str) }
+#   x.report('meth5') { meth5(str) }
+#
+#   x.compare!
+# end
 
-def meth1(str)
-  str.split('/').last.split('.').first
+str   = '/Users/ccocchi/code/rtfdoc/content'
+str2  = '/Users/ccocchi/code/rtfdoc/content/**/*.md'
+
+def explore(path)
+  res = []
+  inner(path, res)
+  res
 end
 
-def meth2(str)
-  str.split('/').last.slice(0..-4)
+def inner(path, res)
+  Dir.each_child(path).each do |child|
+    cpath = "#{path}/#{child}"
+    if File.directory?(cpath)
+      inner(cpath, res)
+    else
+      res << cpath
+    end
+  end
 end
 
-def meth3(str)
-  i = str.rindex('/')
-  str.slice(i + 1..-4)
-end
-
-def meth4(str)
-  /(?<name>\w+)\.md\Z/.match(str)[:name]
-end
-
-def meth5(str)
-  i = str.rindex('/')
-  str.slice(i + 1, str.length - i - 4)
-end
-
-puts meth5(str)
+puts explore(str).inspect
+puts Dir.glob(str2).inspect
 
 Benchmark.ips do |x|
-  x.report('meth1') { meth1(str) }
-  x.report('meth2') { meth2(str) }
-  x.report('meth3') { meth3(str) }
-  x.report('meth4') { meth4(str) }
-  x.report('meth5') { meth5(str) }
+  x.report('explore') { explore(str) }
+  x.report('glob')    { Dir.glob(str2) }
 
   x.compare!
 end

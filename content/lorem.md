@@ -1,4 +1,4 @@
-# User
+# Lorem
 
 Nullam et orci ac massa rhoncus aliquet eu in metus. Cras at turpis sollicitudin, hendrerit tellus ut, dapibus turpis. Nam cursus lacinia ligula, non vestibulum odio pharetra iaculis. Etiam sed velit dapibus est ornare scelerisque eget vel felis. Duis dictum enim ac ante varius, vel dapibus felis congue. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque scelerisque nisi id leo rutrum, sit amet malesuada nulla faucibus. Sed venenatis lorem ac mollis consectetur. Cras lacinia ultricies lectus nec sagittis. Vivamus viverra, ipsum quis sollicitudin consequat, eros felis aliquam massa, in aliquam nunc erat sit amet nisi. Ut urna nunc, placerat sed rhoncus vitae, fringilla sed purus.
 
@@ -8,6 +8,6 @@ Maecenas bibendum est non ligula tincidunt, nec bibendum sapien sollicitudin. Ae
 
 $$$
 
-```response
-{}
+```endpoints
+GET /api/v3/lorem/:id
 ```
