@@ -171,13 +171,15 @@ module RTFDoc
     RUBY
 
     def menu_output
-      anchor(menu_title)
+      "<li>#{anchor(menu_title)}</li>"
     end
 
     def signature
       sig = <<-HTML.strip!
-        <div class="method method-#{method.downcase}">#{method.upcase}</div>
-        <div class="path">#{path}</div>
+        <div class="endpoint-def">
+          <div class="method method__#{method.downcase}">#{method.upcase}</div>
+          <div class="path">#{path}</div>
+        </div>
       HTML
 
       anchor(sig)
@@ -194,7 +196,7 @@ module RTFDoc
     end
 
     def anchor(content)
-      %(<li><a href="##{id}">#{content}</a></li>)
+      %(<a href="##{id}">#{content}</a>)
     end
 
     def parse_metadata
