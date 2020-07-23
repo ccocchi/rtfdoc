@@ -13,11 +13,15 @@
     }
 
     code .s2 {
-      color: var(--sail-green500);
+      color: #98c379;
     }
 
     code .kc {
-      color: var(--sail-orange500);
+      color: #d19a66;
+    }
+
+    code .mi {
+      color: #56b6c2;
     }
   </style>
 </head>
@@ -45,6 +49,8 @@
     <%= @content %>
   </div>
   <script async type="text/javascript">
+    /* Theme switch */
+
     const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
     const body = document.querySelector('body');
 
@@ -58,6 +64,40 @@
 
     toggleSwitch.addEventListener('change', switchTheme, false);
 
+    /* Navbar links & expandable */
+
+    const navbarLinks = document.querySelectorAll('nav a');
+
+    function becomeCurrent(e) {
+      const target = e.currentTarget;
+      const oldCurrent = document.querySelector('nav a.current');
+      if (oldCurrent) {
+        oldCurrent.classList.remove('current');
+      }
+
+      target.classList.add('current');
+    }
+
+    navbarLinks.forEach(l => l.addEventListener('click', becomeCurrent, false));
+
+    const navbarExpandables = document.querySelectorAll('a.expandable');
+
+    function expandItems(e) {
+      const target = e.currentTarget;
+      const parent = target.parentElement;
+      const oldExpanded = document.querySelector('li.expanded');
+      if (oldExpanded) {
+        oldExpanded.classList.remove('expanded');
+      }
+
+      parent.classList.add('expanded');
+    }
+
+    navbarExpandables.forEach(b => {
+      b.addEventListener('click', expandItems, false);
+    });
+
+    /* Nested attributes */
 
     function toggleChildList(e) {
       const target = e.currentTarget;

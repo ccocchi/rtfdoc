@@ -2,21 +2,10 @@ require 'bundler/setup'
 Bundler.require(:default)
 
 module RTFDoc
-
-  module Renderable
-    def initialize(renderer)
-      @renderer = renderer
-    end
-
-    def render_markdown(text)
-      byebug if text == nil
-      @renderer.render(text)
-    end
-  end
-
   class AttributesComponent
-    def initialize(raw_attrs)
+    def initialize(raw_attrs, title)
       @attributes = YAML.load(raw_attrs)
+      @title      = title
     end
 
     template = Erubi::Engine.new(File.read(File.expand_path('../src/attributes.erb', __dir__)))
@@ -39,7 +28,43 @@ module RTFDoc
     end
 
     def header(text, level)
-      "<h#{level}>#{text}</h#{level}>"
+      if level == 4
+        %(<div class="header-table">#{text}</div>)
+      else
+        "<h#{level}>#{text}</h#{level}>"
+      end
+    end
+
+    def table(header, body)
+      <<-HTML
+        <div class="table-wrapper">
+          <div class="header-table">#{@table_title}</div>
+          <table>
+            <thead></thead>
+            <tbody>#{body}</tbody>
+          </table>
+        </div>
+      HTML
+    ensure
+      @table_title = nil
+    end
+
+    def table_row(content)
+      content.empty? ? nil : "<tr>#{content}</tr>"
+    end
+
+    def table_cell(content, alignment)
+      if !alignment
+        @table_title = content unless content.empty?
+        return
+      end
+
+      c = case alignment
+      when 'left'   then 'definition'.freeze
+      when 'right'  then 'property'.freeze
+      end
+
+      "<td class=\"cell-#{c}\">#{content}</td>"
     end
 
     def block_html(raw_html)
@@ -47,8 +72,8 @@ module RTFDoc
     end
 
     def block_code(code, language)
-      if language == 'attributes'
-        AttributesComponent.new(code).output
+      if language == 'attributes' || language == 'parameters'
+        AttributesComponent.new(code, language).output
       elsif language == 'response'
         <<-HTML
         <div class="section-response">
@@ -72,103 +97,58 @@ module RTFDoc
     end
   end
 
-  class Resource
-    attr_reader :sections
+  module RenderAsSection
+    template = Erubi::Engine.new(File.read(File.expand_path('../src/section.erb', __dir__)))
+    module_eval <<-RUBY
+      define_method(:output) { #{template.src} }
+    RUBY
 
-    ORDER = %w[object index show create update destroy]
-
-    def initialize(name)
-      @name     = name
-      @available_sections = {}
+    def content_to_html
+      RTFDoc.markdown_to_html(@content)
     end
 
-    def finalize(o = nil)
-      ensure_valid
-      o ||= ORDER
-      @available_sections['desc'].resource = self
-      o.unshift('desc') unless o[0] == 'desc'
-
-      @sections = @available_sections.values_at(*o).compact
+    def example_to_html
+      @example ? RTFDoc.markdown_to_html(@example) : nil
     end
+  end
 
-    def method_sections
-      sections.slice(2..-1)
-    end
-
-    def append_section(s)
-      @available_sections[s.filename] = s
-    end
-
-    def output
-      sections.map(&:output).join("\n")
-    end
-
-    def menu_output
-      ary  = sections.dup
-      head = ary.shift
-
-      <<-HTML
-        <li>
-          <a href="##{head.id}">#{head.menu_title}</a>
-          <ul>
-            #{ary.map(&:menu_output)}
-          </ul>
-        </li>
-      HTML
-    end
-
-    private
-
-    def ensure_valid
-      raise ArgumentError, "missing desc.md for #{@name}"    unless @available_sections.key?('desc')
-      raise ArgumentError, "missing object.md for #{@name}"  unless @available_sections.key?('object')
+  module Anchorable
+    def anchor(content, class_list: nil)
+      %(<a href="##{anchor_id}") <<
+        (class_list ? %( class="#{class_list}") : '') <<
+        "><span>#{content}</span></a>"
     end
   end
 
   class Section
-    include Renderable
+    include RenderAsSection
+    include Anchorable
 
-    def self.build(content, filename, renderer, resource = false)
-      if resource && filename == 'desc'
-        ResourceDesc.new(content, filename, renderer)
-      else
-        Section.new(content, filename, renderer)
-      end
-    end
+    attr_reader :name, :method, :path
 
-    # Name of the resource section is part of
-    # attr_reader :resource
+    def initialize(name, raw_content, resource: nil)
+      @name     = name
+      @resource = resource
+      metadata  = nil
 
-    # Filename without the `md` extension
-    attr_reader :filename
-
-    attr_reader :id, :menu_title, :path, :method
-
-    def initialize(raw_content, filename, renderer)
       if raw_content.start_with?('---')
         idx = raw_content.index('---', 4)
         raise 'bad format' unless idx
-
-        @metadata = raw_content.slice!(0, idx)
-        @content, @example = raw_content.split('$$$')
-        @content.slice!(0, 3) # remove leading `---` left
-      else
-        @content, @example = raw_content.split('$$$')
+        parse_metadata(YAML.load(raw_content.slice!(0, idx + 3)))
       end
 
-      super(renderer)
+      raise 'missing metadata' if resource && !@path && !@method
 
-      @filename = filename
-      parse_metadata
+      @content, @example = raw_content.split('$$$')
     end
 
-    def finalize # noop
+    def id
+      @id ||= name
     end
 
-    template = Erubi::Engine.new(File.read(File.expand_path('../src/section.erb', __dir__)))
-    class_eval <<-RUBY
-      define_method(:output) { #{template.src} }
-    RUBY
+    def anchor_id
+      @resource ? "#{@resource}-#{id}" : id
+    end
 
     def menu_output
       "<li>#{anchor(menu_title)}</li>"
@@ -187,65 +167,100 @@ module RTFDoc
 
     private
 
-    def content_to_html
-      render_markdown(@content)
+    def menu_title
+      @menu_title || name.capitalize
     end
 
-    def example_to_html
-      @example ? render_markdown(@example.strip) : nil
-    end
-
-    def anchor(content)
-      %(<a href="##{id}">#{content}</a>)
-    end
-
-    def parse_metadata
-      meta = defined?(@metadata) ? YAML.load(@metadata) : {}
-      @id = meta['id'] || filename
-      @menu_title  = meta['menu_title'] || filename
-      @path = meta['path']
-      @method = meta['method'] || conventional_method
-    end
-
-    def conventional_method
-      case filename
-      when 'create' then 'POST'
-      when 'index', 'show' then 'GET'
-      when 'update' then 'PUT'
-      when 'destroy' then 'DELETE'
-      else
-        nil
-      end
+    def parse_metadata(hash)
+      @id           = hash['id']
+      @menu_title   = hash['menu_title']
+      @path         = hash['path']
+      @method       = hash['method']
     end
   end
 
-  class ResourceDesc < Section
-    attr_reader :id, :menu_title, :content
+  class ResourceDesc
+    include RenderAsSection
+    include Anchorable
 
-    attr_accessor :resource
+    attr_reader :resource_name
 
-    def filename
+    def initialize(resource_name, content)
+      @resource_name  = resource_name
+      @content        = content
+    end
+
+    def name
       'desc'
     end
 
-    def example_to_html
-      <<-HTML.strip!
+    def anchor_id
+      "#{resource_name}-desc"
+    end
+
+    def generate_example(sections)
+      endpoints   = sections.reject { |s| s.name == 'desc' || s.name == 'object' }
+      signatures  = endpoints.each_with_object("") do |e, res|
+        res << %(<div class="resource-sig">#{e.signature}</div>)
+      end
+
+      @example = <<-HTML
       <div class="section-response">
         <div class="response-topbar">ENDPOINTS</div>
-        <div class="section-endpoints">#{endpoints_signatures}</div>
+        <div class="section-endpoints">#{signatures}</div>
       </div>
       HTML
     end
 
-    private
+    def example_to_html
+      @example
+    end
+  end
 
-    def endpoints_signatures
-      res = ""
-      resource.method_sections.each do |s|
-        res << %(<div class="resource-sig">#{s.signature}</div>)
+  class Resource
+    DEFAULT = %w[desc object index show create update destroy]
+
+    def self.build(name, paths, endpoints: nil)
+      endpoints ||= DEFAULT
+      desc = nil
+
+      sections = endpoints.each_with_object([]) do |endpoint, res|
+        filename = paths[endpoint]
+        next unless filename
+
+        content = File.read(filename)
+
+        if endpoint == 'desc'
+          desc = ResourceDesc.new(name, content)
+          res << desc
+        else
+          res << Section.new(endpoint, content, resource: name)
+        end
       end
 
-      res
+      desc&.generate_example(sections)
+      Resource.new(name, sections)
+    end
+
+    attr_reader :name, :sections
+
+    def initialize(name, sections)
+      @name, @sections = name, sections
+    end
+
+    def output
+      inner = sections.map(&:output).join("\n")
+      %(<section class="head-section">#{inner}</section>)
+    end
+
+    def menu_output
+      head, *tail = sections
+      <<-HTML
+        <li>
+          #{head.anchor(name.capitalize, class_list: 'expandable')}
+          <ul>#{tail.map(&:menu_output).join}</ul>
+        </li>
+      HTML
     end
   end
 
@@ -253,43 +268,22 @@ module RTFDoc
     attr_reader :renderer, :config
 
     def initialize
-      @renderer = Redcarpet::Markdown.new(Renderer, {
-        underline:            true,
-        strikethrough:        true,
-        space_after_headers:  true,
-        fenced_code_blocks:   true,
-        no_intra_emphasis:    true
-      })
       @config = YAML.load_file('config.yml')
       @parts  = {}
       @base_path = File.expand_path('../content', __dir__)
     end
 
     def run
-      Dir.glob("#{@base_path}/**/*.md").each do |path|
-        filename, dirname = stat(path)
-        content = File.read(path)
-        section = Section.build(content, filename, renderer, !dirname.nil?)
+      tree = build_content_tree
 
-        if dirname
-          @parts[dirname] ||= Resource.new(dirname)
-          @parts[dirname].append_section(section)
+      nodes = config['resources'].map do |rs|
+        if rs.is_a?(Hash)
+          name, endpoints = rs.each_pair.first
+          paths = tree[name]
+          Resource.build(name, paths, endpoints: endpoints)
         else
-          @parts[filename] = section
-        end
-      end
-
-      nodes = @config['resources'].map do |r|
-        if r.is_a?(String)
-          node = @parts.fetch(r)
-          node.finalize
-          node
-        else
-          res, order = res.each_pair[0]
-          node = paths.fetch(res)
-          raise "configuration error for #{res}" unless node.is_a?(Resource)
-          node.finalize
-          node
+          paths = tree[rs]
+          paths.is_a?(Hash) ? Resource.build(rs, paths) : Section.new(rs, File.read(paths))
         end
       end
 
@@ -300,13 +294,22 @@ module RTFDoc
 
     private
 
-    def stat(path)
-      slicer  = (@base_path.length + 1)..-1
-      str     = path.slice(slicer)
-      i       = str.rindex('/') || -1
-      dirname = i > 0 ? str.slice(0, i) : nil
+    def build_content_tree
+      tree        = {}
+      slicer      = (@base_path.length + 1)..-1
+      ext_slicer  = -3..-1
 
-      [str.slice(i + 1, str.length - i - 4), dirname]
+      Dir.glob("#{@base_path}/**/*.md").each do |path|
+        str       = path.slice(slicer)
+        parts     = str.split('/')
+        filename  = parts.pop
+        filename.slice!(ext_slicer)
+
+        leaf = parts.reduce(tree) { |h, part| h[part] || h[part] = {} }
+        leaf[filename] = path
+      end
+
+      tree
     end
   end
 
@@ -368,6 +371,20 @@ module RTFDoc
 
     end
 
+  end
+
+  def self.renderer
+    @renderer ||= Redcarpet::Markdown.new(Renderer, {
+      underline:            true,
+      space_after_headers:  true,
+      fenced_code_blocks:   true,
+      no_intra_emphasis:    true,
+      tables:               true
+    })
+  end
+
+  def self.markdown_to_html(text)
+    renderer.render(text)
   end
 
   def self.generate

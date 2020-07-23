@@ -1,11 +1,14 @@
 <div class="section-list">
-  <h5 class="section-list-title">Attributes</h5>
+  <h5 class="section-list-title"><%= @title.capitalize %></h5>
   <ul>
     <% @attributes.each do |name, hash| %>
     <li class="list-item">
       <div class="list-item-label">
         <div class="list-item-name"><%= name %></div>
-        <div class="list-item-type"><%= hash['type'] %> </div>
+        <div class="list-item-type"><%= hash['type'] %></div>
+        <% if hash['required'] %>
+          <div class="list-item-req">required</div>
+        <% end %>
       </div>
       <div class="list-item-description">
         <p><%= hash['desc'] %></p>

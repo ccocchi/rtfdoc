@@ -15,6 +15,7 @@ You can use the Stripe API in test mode, which does not affect your live data or
 name:
   type: string
   desc: the actual object you're getting
+  required: true
 address:
   type: hash
   desc: details about user's address

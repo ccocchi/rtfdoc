@@ -1,5 +1,5 @@
 require 'benchmark/ips'
-# require 'erubi'
+require 'erubi'
 #
 # buf = Erubi::Engine.new('
 # <div class="list-item-label">
@@ -68,32 +68,61 @@ require 'benchmark/ips'
 #   x.compare!
 # end
 
-str   = '/Users/ccocchi/code/rtfdoc/content'
-str2  = '/Users/ccocchi/code/rtfdoc/content/**/*.md'
+# str   = '/Users/ccocchi/code/rtfdoc/content'
+# str2  = '/Users/ccocchi/code/rtfdoc/content/**/*.md'
+#
+# def explore(path)
+#   res = []
+#   inner(path, res)
+#   res
+# end
+#
+# def inner(path, res)
+#   Dir.each_child(path).each do |child|
+#     cpath = "#{path}/#{child}"
+#     if File.directory?(cpath)
+#       inner(cpath, res)
+#     else
+#       res << cpath
+#     end
+#   end
+# end
+#
+# puts explore(str).inspect
+# puts Dir.glob(str2).inspect
+#
+# Benchmark.ips do |x|
+#   x.report('explore') { explore(str) }
+#   x.report('glob')    { Dir.glob(str2) }
+#
+#   x.compare!
+# end
 
-def explore(path)
-  res = []
-  inner(path, res)
-  res
-end
+# @base_path  = File.expand_path('../content', __FILE__)
+# tree        = {}
+# slicer      = (@base_path.length + 1)..-1
+# ext_slicer  = -3..-1
+#
+# Dir.glob("#{@base_path}/**/*.md").each do |path|
+#   str       = path.slice(slicer)
+#   parts     = str.split('/')
+#   filename  = parts.pop
+#   filename.slice!(ext_slicer)
+#
+#   puts parts
+#   leaf = parts.reduce(tree) { |part, h| dir = {}; h[part] = dir; dir }
+#   puts "leaf=#{leaf}"
+# end
 
-def inner(path, res)
-  Dir.each_child(path).each do |child|
-    cpath = "#{path}/#{child}"
-    if File.directory?(cpath)
-      inner(cpath, res)
-    else
-      res << cpath
-    end
-  end
-end
+# buf = Erubi::Engine.new("<tr><%= content %></tr>", freeze: true)
+# puts buf.src
+#
+# exit
 
-puts explore(str).inspect
-puts Dir.glob(str2).inspect
+content = "something"
 
 Benchmark.ips do |x|
-  x.report('explore') { explore(str) }
-  x.report('glob')    { Dir.glob(str2) }
-
+  x.report('inter') { "<tr>#{content}</tr>" }
+  x.report('<<') { _buf = String.new; _buf << '<tr>'.freeze << content << '</tr>'.freeze }
   x.compare!
 end

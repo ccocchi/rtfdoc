@@ -1,7 +1,10 @@
 ---
 path: /api/v3/users
 method: GET
+menu_title: Search a user
 ---
+
+# Search a user
 
 Search within users with email, firstname, lastname.
 
@@ -14,11 +17,11 @@ q:
 $$$
 
 ```response
-{
-[{
-  "id": 137,
-  "firstname": "Rick",
-  "lastname": "Sanchez"
-}]
-}
+[
+  {
+    "id": 137,
+    "firstname": "Rick",
+    "lastname": "Sanchez"
+  }
+]
 ```
