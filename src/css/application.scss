@@ -189,6 +189,9 @@
 
   --monospace-font: "SFMono-Regular", "Consolas", "Menlo", monospace;
   --font-size-main: 16px;
+
+  --redish: #e06c75;
+  --red-odyssey: #f76c6c;
 }
 
 * {
@@ -250,8 +253,7 @@ body[data-theme="light"] {
     text-decoration: none;
     color: var(--sail-gray300);
     transition: color .2s ease;
-    text-transform: capitalize;
-    font-size: 16px;
+    font-size: 14px;
     display: block;
     padding: 5px 16px;
 
@@ -260,6 +262,19 @@ body[data-theme="light"] {
     }
   }
 
+  a.current span {
+    border-bottom: 2px solid var(--sail-blue500);
+  }
+
+  li > ul {
+    display: none;
+    padding-left: 16px;
+    transition: all 2s ease;
+  }
+
+  li.expanded > ul {
+    display: block;
+  }
 }
 
 /*Simple css to style it like a toggle switch*/
@@ -331,7 +346,7 @@ body[data-theme="light"] {
   overflow-y: scroll;
 }
 
-.head-section {
+section {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -347,6 +362,10 @@ body[data-theme="light"] {
 
 #content > section:first-of-type > .section-divider {
   visibility: hidden;
+}
+
+section > section:first-of-type .section-divider {
+  width: 100% ;
 }
 
 section > section .section-divider {
@@ -458,10 +477,20 @@ ul {
   }
 
   .method {
-    padding: 0 5px 0 15px;
+    text-align: right;
+    width: 55px;
+    margin-right: 7px;
   }
 
-  .method__get { color: var(--sail-blue400) }
+  .method__get    { color: var(--sail-blue400) }
+  .method__post   { color: #50b573 }
+
+  .method__patch,
+  .method__put {
+    color: #50b573;
+  }
+
+  .method__delete { color: var(--redish) }
 
   a {
     text-decoration: none
@@ -510,17 +539,27 @@ ul {
     margin-bottom: -8px;
   }
 
+  .list-item-label > div {
+    margin-right: 6px;
+  }
+
   .list-item-name {
     font-family: var(--monospace-font);
     font-size: 14px;
     color: var(--sail-gray100);
-    margin-right: 6px;
   }
 
   .list-item-type {
     font-size: 12px;
     font-weight: 600;
     color: var(--sail-gray500);
+  }
+
+  .list-item-req {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--redish);
+    text-transform: uppercase;
   }
 
   .list-item-description p {
@@ -579,4 +618,44 @@ ul {
 
 .svg-icon {
   fill: currentColor;
+}
+
+/** Tables **/
+
+.header-table {
+  padding: 14px;
+  color: var(--sail-gray100);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 18px;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--sail-gray700);
+}
+
+.table-wrapper {
+  border: 1px solid var(--sail-gray700);
+  border-radius: 8px;
+}
+
+table td {
+  padding: 9px 14px 9px 10px;
+  color: var(--sail-gray200);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  vertical-align: baseline;
+}
+
+table tr td:first-child {
+  padding: 9px 10px 9px 14px;
+  width: 40%;
+}
+
+table .cell-property {
+  font-weight: 600;
+  text-align: right;
+}
+
+table .cell-definition {
+  text-align: left;
 }
