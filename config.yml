@@ -7,3 +7,4 @@ resources:
     - index
     - create
     - destroy
+  - quest

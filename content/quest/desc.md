@@ -1,0 +1,3 @@
+# Quest
+
+Quests are quests.

@@ -130,6 +130,20 @@
       b.addEventListener('click', toggleChildList, true)
     })
 
+    /** Show buttons **/
+
+    const showButtons = document.querySelectorAll('.button-wrapper');
+
+    function expandResource(e) {
+      const target  = e.currentTarget;
+      const section = target.parentElement;
+      const headSection = section.parentElement;
+
+      headSection.classList.add('expanded');
+    }
+
+    showButtons.forEach(b => b.addEventListener('click', expandResource, false));
+
   </script>
 </body>
 </html>

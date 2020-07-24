@@ -8,4 +8,14 @@
       <%= example_to_html %>
     </div>
   </div>
+  <% if include_show_button %>
+    <div class="button-wrapper">
+      <div class="button">
+        <div>show</div>
+          <svg style="width: 12px;height: 12px;" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13.591 5.293a1 1 0 0 1 1.416 1.416l-6.3 6.3a1 1 0 0 1-1.414 0l-6.3-6.3A1 1 0 0 1 2.41 5.293L8 10.884z" fill-rule="evenodd"></path>
+          </svg>
+      </div>
+    </div>
+  <% end %>
 </section>

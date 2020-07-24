@@ -102,6 +102,10 @@ module RTFDoc
   end
 
   module RenderAsSection
+    def self.included(other)
+      other.attr_accessor(:include_show_button)
+    end
+
     template = Erubi::Engine.new(File.read(File.expand_path('../src/section.erb', __dir__)))
     module_eval <<-RUBY
       define_method(:output) { #{template.src} }
@@ -253,6 +257,9 @@ module RTFDoc
     end
 
     def output
+      head, *tail = sections
+      head.include_show_button = true
+
       inner = sections.map(&:output).join("\n")
       %(<section class="head-section">#{inner}</section>)
     end
