@@ -8,19 +8,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="application.css">
   <style type="text/css" media="all">
-    code, code .w {
+    pre code,
+    pre code .w {
       color: var(--sail-gray300);
     }
 
-    code .s2 {
+    pre code .s2 {
       color: #98c379;
     }
 
-    code .kc {
+    pre code .kc {
       color: #d19a66;
     }
 
-    code .mi {
+    pre code .mi {
       color: #56b6c2;
     }
   </style>
@@ -144,14 +145,14 @@ The Stripe API is organized around REST. Our API has predictable resource-orient
   <div class="section-divider"></div>
   <div class="section-area">
     <div class="section-body">
-      <h1>Errors</h1><p>Odyssey uses conventional HTTP response codes to indicate the success or failure of an API request. In general: Codes in the 2xx range indicate success. Codes in the 4xx range indicate an error that failed given the information provided (e.g., a required parameter was omitted or ill-formed, etc.). Codes in the 5xx range indicate an error with our servers (these are rare).</p><p>Some 4xx errors that require more information about what happened include an error code that briefly explains the error reported.</p>
+      <h1>Errors</h1><p>Odyssey uses conventional HTTP response codes to indicate the success or failure of an API request. In general: Codes in the <code>2xx</code> range indicate success. Codes in the <code>4xx</code> range indicate an error that failed given the information provided (e.g., a required parameter was omitted or ill-formed, etc.). Codes in the <code>5xx</code> range indicate an error with our servers (these are rare).</p><p>Some <code>4xx</code> errors that require more information about what happened include an error code that briefly explains the error reported.</p>
     </div>
     <div class="section-example">
               <div class="table-wrapper">
           <div class="header-table">http status code summary</div>
           <table>
             <thead></thead>
-            <tbody><tr><td class="cell-">200 - OK</td><td class="cell-">Everything worked as expected.</td></tr><tr><td class="cell-">204 - No Content</td><td class="cell-">Everything worked as expected but nothing needed to be returned.</td></tr><tr><td class="cell-">400 - Bad Request</td><td class="cell-">The request was unacceptable, often due to missing a required parameter.</td></tr><tr><td class="cell-">401 - Unauthorized</td><td class="cell-">No valid token was provided.</td></tr><tr><td class="cell-">403 - Forbidden</td><td class="cell-">The user doesn't have permissions to perform the request.</td></tr><tr><td class="cell-">404 - Not Found</td><td class="cell-">The requested resource does not exist.</td></tr><tr><td class="cell-">500, 502, 503, 504 - Server Errors</td><td class="cell-">Something went wrong on our end.</td></tr></tbody>
+            <tbody><tr><td class="cell-">200 - OK</td><td class="cell-">Everything worked as expected.</td></tr><tr><td class="cell-">204 - No Content</td><td class="cell-">Everything worked as expected but nothing needed to be returned.</td></tr><tr><td class="cell-">400 - Bad Request</td><td class="cell-">The request was unacceptable, often due to missing a required parameter.</td></tr><tr><td class="cell-">401 - Unauthorized</td><td class="cell-">No valid token was provided.</td></tr><tr><td class="cell-">403 - Forbidden</td><td class="cell-">The user doesn't have permissions to perform the request.</td></tr><tr><td class="cell-">404 - Not Found</td><td class="cell-">The requested resource does not exist.</td></tr><tr><td class="cell-">422 - Unprocessable Entity</td><td class="cell-">The parameters were valid but the request failed.</td></tr><tr><td class="cell-">5XX - Server Errors</td><td class="cell-">Something went wrong on our end.</td></tr></tbody>
           </table>
         </div>
 
@@ -275,7 +276,9 @@ The Stripe API is organized around REST. Our API has predictable resource-orient
 </section>
 </section>
   </div>
-  <script async type="text/javascript">
+  <script type="text/javascript" src="js/throttle.js"></script>
+  <script type="text/javascript" src="js/scroll.js"></script>
+  <script type="text/javascript">
     /* Theme switch */
 
     const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
@@ -302,6 +305,8 @@ The Stripe API is organized around REST. Our API has predictable resource-orient
         oldCurrent.classList.remove('current');
       }
 
+      currentLink = target;
+      current = target.getAttribute('href').slice(1)
       target.classList.add('current');
     }
 
