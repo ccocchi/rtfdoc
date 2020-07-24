@@ -1,2 +1,4 @@
 .sass-cache/
 .byebug_history
+node_modules/
+yarn.lock

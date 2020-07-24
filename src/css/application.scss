@@ -199,11 +199,16 @@
   word-wrap: break-word;
 }
 
+html {
+  overflow: auto;
+}
+
 body {
   margin: 0;
   padding: 0;
   font-family: -apple-system, "BlinkMacSystemFont", "Segoe UI", "Roboto", Helvetica, Arial, sans-serif;
   overflow-x: hidden;
+  overflow-y: scroll;
   max-width: 100%;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -263,7 +268,7 @@ body[data-theme="light"] {
   }
 
   a.current span {
-    border-bottom: 2px solid var(--sail-blue500);
+    border-bottom: 2px solid var(--sail-cyan500);
   }
 
   li > ul {
@@ -658,4 +663,18 @@ table .cell-property {
 
 table .cell-definition {
   text-align: left;
+}
+
+/** Inline code **/
+
+p code {
+  color: var(--sail-gray100);
+  border-radius: 4px;
+  border: 1px solid hsla(0, 0%, 100%, .1);
+  padding: 2px 3px 0;
+  margin: 0 1px;
+  font-size: 15px;
+  font-family: var(--monospace-font);
+  font-weight: 500;
+  background: hsla(0, 0%, 100%, .08)
 }

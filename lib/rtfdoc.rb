@@ -71,6 +71,10 @@ module RTFDoc
       raw_html
     end
 
+    def codespan(code)
+      "<code>#{code}</code>"
+    end
+
     def block_code(code, language)
       if language == 'attributes' || language == 'parameters'
         AttributesComponent.new(code, language).output
