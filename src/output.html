@@ -46,6 +46,10 @@
           <a href="#user-desc" class="expandable"><span>User</span></a>
           <ul><li><a href="#user-index"><span>Search a user</span></a></li><li><a href="#user-create"><span>Create a user</span></a></li><li><a href="#user-destroy"><span>Delete a user</span></a></li></ul>
         </li>
+        <li>
+          <a href="#quest-desc" class="expandable"><span>Quest</span></a>
+          <ul><li><a href="#quest-index"><span>List all quests</span></a></li></ul>
+        </li>
 </ul>
     </nav>
   </div>
@@ -182,6 +186,14 @@ The Stripe API is organized around REST. Our API has predictable resource-orient
 
     </div>
   </div>
+    <div class="button-wrapper">
+      <div class="button">
+        <div>show</div>
+          <svg style="width: 12px;height: 12px;" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13.591 5.293a1 1 0 0 1 1.416 1.416l-6.3 6.3a1 1 0 0 1-1.414 0l-6.3-6.3A1 1 0 0 1 2.41 5.293L8 10.884z" fill-rule="evenodd"></path>
+          </svg>
+      </div>
+    </div>
 </section>
 
 <section id="user-index">
@@ -274,6 +286,55 @@ The Stripe API is organized around REST. Our API has predictable resource-orient
     </div>
   </div>
 </section>
+</section><section class="head-section"><section id="quest-desc">
+  <div class="section-divider"></div>
+  <div class="section-area">
+    <div class="section-body">
+      <h1>Quest</h1><p>Quests are quests.</p>
+    </div>
+    <div class="section-example">
+            <div class="section-response">
+        <div class="response-topbar">ENDPOINTS</div>
+        <div class="section-endpoints"><div class="resource-sig"><a href="#quest-index"><span><div class="endpoint-def">
+          <div class="method method__get">GET</div>
+          <div class="path">/api/v3/quests</div>
+        </div></span></a></div></div>
+      </div>
+
+    </div>
+  </div>
+    <div class="button-wrapper">
+      <div class="button">
+        <div>show</div>
+          <svg style="width: 12px;height: 12px;" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13.591 5.293a1 1 0 0 1 1.416 1.416l-6.3 6.3a1 1 0 0 1-1.414 0l-6.3-6.3A1 1 0 0 1 2.41 5.293L8 10.884z" fill-rule="evenodd"></path>
+          </svg>
+      </div>
+    </div>
+</section>
+
+<section id="quest-index">
+  <div class="section-divider"></div>
+  <div class="section-area">
+    <div class="section-body">
+      <h1>List all quests</h1><p>Retrieve all quests user has access to.</p>
+    </div>
+    <div class="section-example">
+              <div class="section-response">
+          <div class="response-topbar">RESPONSE</div>
+          <pre><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"name"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"title_translations"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"en"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A quest"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span></code></pre>
+        </div>
+
+    </div>
+  </div>
+</section>
 </section>
   </div>
   <script type="text/javascript" src="js/throttle.js"></script>
@@ -356,6 +417,20 @@ The Stripe API is organized around REST. Our API has predictable resource-orient
     childListButtons.forEach(b => {
       b.addEventListener('click', toggleChildList, true)
     })
+
+    /** Show buttons **/
+
+    const showButtons = document.querySelectorAll('.button-wrapper');
+
+    function expandResource(e) {
+      const target  = e.currentTarget;
+      const section = target.parentElement;
+      const headSection = section.parentElement;
+
+      headSection.classList.add('expanded');
+    }
+
+    showButtons.forEach(b => b.addEventListener('click', expandResource, false));
 
   </script>
 </body>

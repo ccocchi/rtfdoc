@@ -216,6 +216,7 @@ body[data-theme="light"] {
   overflow-x: hidden;
   overflow-y: scroll; }
 
+/** Sections **/
 section {
   width: 100%;
   display: flex;
@@ -236,6 +237,45 @@ section > section:first-of-type .section-divider {
 
 section > section .section-divider {
   width: calc(100% - 2 * var(--section-padding)); }
+
+.head-section > section:first-child {
+  display: block; }
+
+.head-section > section {
+  display: none;
+  background-color: var(--sail-gray800); }
+
+.head-section.expanded > section {
+  display: block;
+  background-color: var(--sail-gray900); }
+.head-section.expanded .button-wrapper {
+  display: none; }
+
+.button-wrapper {
+  display: flex;
+  width: 100%;
+  justify-content: center; }
+  .button-wrapper .button {
+    display: flex;
+    justify-content: center;
+    background: var(--sail-gray900);
+    border-radius: 24px;
+    padding: 4px 12px;
+    color: var(--sail-cyan500);
+    text-transform: uppercase;
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 18px;
+    border: 1px solid var(--sail-gray600);
+    font-weight: 600;
+    transform: translateY(-28px); }
+    .button-wrapper .button > div {
+      margin-right: 4px; }
+    .button-wrapper .button:hover {
+      filter: brightness(115%); }
+  .button-wrapper svg {
+    margin: 2px 0;
+    fill: var(--sail-gray400); }
 
 .section-area {
   width: 100%;
@@ -263,6 +303,10 @@ p {
   font-weight: 400;
   color: var(--sail-gray200);
   --moz-osx-font-smoothing: grayscale; }
+
+section section:not(:first-of-type) p {
+  font-size: 14px;
+  line-height: 22px; }
 
 ul {
   list-style: none;
