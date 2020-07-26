@@ -69,22 +69,6 @@
 
     /* Navbar links & expandable */
 
-    const navbarLinks = document.querySelectorAll('nav a');
-
-    function becomeCurrent(e) {
-      const target = e.currentTarget;
-      const oldCurrent = document.querySelector('nav a.current');
-      if (oldCurrent) {
-        oldCurrent.classList.remove('current');
-      }
-
-      currentLink = target;
-      current = target.getAttribute('href').slice(1)
-      target.classList.add('current');
-    }
-
-    navbarLinks.forEach(l => l.addEventListener('click', becomeCurrent, false));
-
     const navbarExpandables = document.querySelectorAll('a.expandable');
 
     function expandItems(e) {
