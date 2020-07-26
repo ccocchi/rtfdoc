@@ -167,7 +167,7 @@ The Stripe API is organized around REST. Our API has predictable resource-orient
   <div class="section-divider"></div>
   <div class="section-area">
     <div class="section-body">
-      <h1>User</h1><p>This is an objet representing an email, a password and a role.</p>
+      <h1>User</h1><p>Morbi interdum placerat ante. Integer sollicitudin, augue ac interdum porta, nunc neque blandit quam, ac bibendum lacus libero eget odio. Aenean a semper quam. Praesent vulputate purus ut nisi tristique pulvinar. Donec sit amet lacinia dui, non luctus orci. In consequat, metus vitae tempus sagittis, nunc magna sagittis lacus, vitae tincidunt libero nisi dignissim libero.</p><p>Mauris vulputate purus non massa condimentum, quis mollis neque dictum. Interdum et malesuada fames ac ante ipsum primis in faucibus. </p>
     </div>
     <div class="section-example">
             <div class="section-response">
@@ -357,21 +357,21 @@ The Stripe API is organized around REST. Our API has predictable resource-orient
 
     /* Navbar links & expandable */
 
-    const navbarLinks = document.querySelectorAll('nav a');
+    // const navbarLinks = document.querySelectorAll('nav a');
+    //
+    // function becomeCurrent(e) {
+    //   const target = e.currentTarget;
+    //   const oldCurrent = document.querySelector('nav a.current');
+    //   if (oldCurrent) {
+    //     oldCurrent.classList.remove('current');
+    //   }
+    //
+    //   currentLink = target;
+    //   current = target.getAttribute('href').slice(1)
+    //   target.classList.add('current');
+    // }
 
-    function becomeCurrent(e) {
-      const target = e.currentTarget;
-      const oldCurrent = document.querySelector('nav a.current');
-      if (oldCurrent) {
-        oldCurrent.classList.remove('current');
-      }
-
-      currentLink = target;
-      current = target.getAttribute('href').slice(1)
-      target.classList.add('current');
-    }
-
-    navbarLinks.forEach(l => l.addEventListener('click', becomeCurrent, false));
+    // navbarLinks.forEach(l => l.addEventListener('click', becomeCurrent, false));
 
     const navbarExpandables = document.querySelectorAll('a.expandable');
 

@@ -8,7 +8,7 @@ let current = null,
     currentLink = null;
 
 function onScroll() {
-  const sectionOnScreen = sections.find(s => s.offsetTop <= node.scrollTop + 50);
+  const sectionOnScreen = sections.find(s => s.offsetTop > 0 && s.offsetTop <= node.scrollTop + 50);
 
   if (sectionOnScreen.id !== current) {
     if (currentLink) currentLink.classList.remove('current')
