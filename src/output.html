@@ -24,11 +24,11 @@
       </div>
     </div>
     <nav class="sidebar-nav" role="navigation">
-      <ul><li><a href="#introduction"><span>Introduction</span></a></li><li><a href="#lorem"><span>Errors</span></a></li>        <li>
+      <ul><li><a href="#introduction"><span>Introduction</span></a></li><li><a href="#lorem"><span>Errors</span></a></li>        <li data-anchor="user">
           <a href="#user-desc" class="expandable"><span>User</span></a>
           <ul><li><a href="#user-index"><span>Search a user</span></a></li><li><a href="#user-create"><span>Create a user</span></a></li><li><a href="#user-destroy"><span>Delete a user</span></a></li></ul>
         </li>
-        <li>
+        <li data-anchor="quest">
           <a href="#quest-desc" class="expandable"><span>Quest</span></a>
           <ul><li><a href="#quest-index"><span>List all quests</span></a></li></ul>
         </li>
@@ -164,7 +164,7 @@
 
     </div>
   </div>
-    <div class="button-wrapper">
+    <div class="button-wrapper" data-resource="user">
       <div class="button">
         <div>show</div>
           <svg style="width: 12px;height: 12px;" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
@@ -279,7 +279,7 @@
 
     </div>
   </div>
-    <div class="button-wrapper">
+    <div class="button-wrapper" data-resource="quest">
       <div class="button">
         <div>show</div>
           <svg style="width: 12px;height: 12px;" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
@@ -343,6 +343,12 @@
         oldExpanded.classList.remove('expanded');
       }
 
+      const anchor = parent.dataset.anchor;
+      if (anchor) {
+        const button = document.querySelector(`div[data-resource="${anchor}"]`)
+        button.click()
+      }
+
       parent.classList.add('expanded');
     }
 
@@ -350,6 +356,24 @@
       b.addEventListener('click', expandItems, false);
     });
 
+    /* Nested links */
+
+    function expandParent(e) {
+      const target = e.currentTarget;
+      let   parent = target.parentElement;
+
+      while (parent.dataset.anchor === undefined) {
+        parent = parent.parentElement;
+      }
+
+      const anchor = parent.dataset.anchor;
+      if (anchor) {
+        const button = document.querySelector(`div[data-resource="${anchor}"]`)
+        button.click()
+      }
+    }
+
+    document.querySelectorAll('nav ul ul a').forEach(a => a.addEventListener('click', expandParent, true));
 
     /* Nested attributes */
 
@@ -387,12 +411,25 @@
       const target  = e.currentTarget;
       const section = target.parentElement;
       const headSection = section.parentElement;
+      const resource = target.dataset.resource;
+
+      if (resource) {
+        const anchor = document.querySelector(`nav li[data-anchor="${resource}"]`);
+        anchor.classList.add('expanded');
+      }
 
       headSection.classList.add('expanded');
     }
 
     showButtons.forEach(b => b.addEventListener('click', expandResource, false));
 
+    window.onload = () => {
+      const hash = window.location.hash;
+      if (hash.includes('-')) {
+        const link = document.querySelector(`a[href="${hash}"]`);
+        if (link) link.click();
+      }
+    };
   </script>
 </body>
 </html>

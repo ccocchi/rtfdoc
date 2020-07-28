@@ -61,6 +61,12 @@
         oldExpanded.classList.remove('expanded');
       }
 
+      const anchor = parent.dataset.anchor;
+      if (anchor) {
+        const button = document.querySelector(`div[data-resource="${anchor}"]`)
+        button.click()
+      }
+
       parent.classList.add('expanded');
     }
 
@@ -68,6 +74,24 @@
       b.addEventListener('click', expandItems, false);
     });
 
+    /* Nested links */
+
+    function expandParent(e) {
+      const target = e.currentTarget;
+      let   parent = target.parentElement;
+
+      while (parent.dataset.anchor === undefined) {
+        parent = parent.parentElement;
+      }
+
+      const anchor = parent.dataset.anchor;
+      if (anchor) {
+        const button = document.querySelector(`div[data-resource="${anchor}"]`)
+        button.click()
+      }
+    }
+
+    document.querySelectorAll('nav ul ul a').forEach(a => a.addEventListener('click', expandParent, true));
 
     /* Nested attributes */
 
@@ -105,12 +129,25 @@
       const target  = e.currentTarget;
       const section = target.parentElement;
       const headSection = section.parentElement;
+      const resource = target.dataset.resource;
+
+      if (resource) {
+        const anchor = document.querySelector(`nav li[data-anchor="${resource}"]`);
+        anchor.classList.add('expanded');
+      }
 
       headSection.classList.add('expanded');
     }
 
     showButtons.forEach(b => b.addEventListener('click', expandResource, false));
 
+    window.onload = () => {
+      const hash = window.location.hash;
+      if (hash.includes('-')) {
+        const link = document.querySelector(`a[href="${hash}"]`);
+        if (link) link.click();
+      }
+    };
   </script>
 </body>
 </html>

@@ -24,6 +24,7 @@
   --title-line-height: 40px;
   --main-font-size: 16px;
   --main-line-height: 24px;
+  --nav-font-size: 14px;
   --endpoints-font-size: 14px;
   --endpoints-line-height: 22px;
   --table-font-size: 14px;
@@ -142,7 +143,8 @@ body[data-theme="light"] {
     text-decoration: none;
     color: var(--nav-color);
     transition: color .2s ease;
-    font-size: var(--main-font-size);
+    font-size: var(--nav-font-size);
+    font-weight: 500;
     display: block;
     padding: 5px 16px; }
     .sidebar-nav a:hover {
@@ -153,7 +155,8 @@ body[data-theme="light"] {
     display: none;
     padding-left: 16px;
     transition: all 2s ease; }
-  .sidebar-nav li.expanded > ul {
+  .sidebar-nav li.expanded > ul,
+  .sidebar-nav li.current > ul {
     display: block; }
 
 /*Simple css to style it like a toggle switch*/
@@ -246,7 +249,8 @@ section > section .section-divider {
 
 /* When expanded, we show the subsections and hide the button. */
 .head-section.expanded > section {
-  display: block; }
+  display: block;
+  background-color: var(--background-color); }
 .head-section.expanded .button-wrapper {
   display: none; }
 
