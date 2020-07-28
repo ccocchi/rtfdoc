@@ -14,6 +14,10 @@ q:
   desc: Query string
 ```
 
+### Returns
+
+Returns an array of users matching the search.
+
 $$$
 
 ```response
