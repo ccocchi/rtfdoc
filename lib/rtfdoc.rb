@@ -158,6 +158,10 @@ module RTFDoc
       @resource ? "#{@resource}-#{id}" : id
     end
 
+    def resource_name
+      @resource
+    end
+
     def menu_output
       "<li>#{anchor(menu_title)}</li>"
     end
@@ -267,7 +271,7 @@ module RTFDoc
     def menu_output
       head, *tail = sections
       <<-HTML
-        <li>
+        <li data-anchor="#{name}">
           #{head.anchor(name.capitalize, class_list: 'expandable')}
           <ul>#{tail.map(&:menu_output).join}</ul>
         </li>
