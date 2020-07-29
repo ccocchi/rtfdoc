@@ -302,7 +302,7 @@ module RTFDoc
         end
       end
 
-      out = File.new(File.expand_path('../src/output.html', __dir__), 'w')
+      out = File.new(File.expand_path('../dist/output.html', __dir__), 'w')
       out.write(Template.new(nodes).output)
       out.close
     end

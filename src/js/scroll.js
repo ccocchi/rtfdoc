@@ -1,3 +1,5 @@
+import throttle from 'lodash.throttle';
+
 const sections = Array.prototype.slice.apply(
   document.querySelectorAll('section')
 ).filter(s => s.id.length > 0).reverse()
@@ -27,4 +29,4 @@ function onScroll() {
   }
 }
 
-node.addEventListener('scroll', _.throttle(onScroll, 400, { leading: true }), false);
+node.addEventListener('scroll', throttle(onScroll, 400, { leading: true }), false);
