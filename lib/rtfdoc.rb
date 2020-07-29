@@ -282,10 +282,11 @@ module RTFDoc
   class Generator
     attr_reader :renderer, :config
 
-    def initialize
-      @config = YAML.load_file('config.yml')
-      @parts  = {}
-      @base_path = File.expand_path('../content', __dir__)
+    def initialize(options)
+      @config       = YAML.load_file(options[:config_file])
+      @content_dir  = options[:content_dir]
+      @output_dir   = options[:tmp_dir]
+      @parts        = {}
     end
 
     def run
@@ -302,7 +303,7 @@ module RTFDoc
         end
       end
 
-      out = File.new(File.expand_path('../dist/output.html', __dir__), 'w')
+      out = File.new("#{@output_dir}/output.html", 'w')
       out.write(Template.new(nodes).output)
       out.close
     end
@@ -311,10 +312,10 @@ module RTFDoc
 
     def build_content_tree
       tree        = {}
-      slicer      = (@base_path.length + 1)..-1
+      slicer      = (@content_dir.length + 1)..-1
       ext_slicer  = -3..-1
 
-      Dir.glob("#{@base_path}/**/*.md").each do |path|
+      Dir.glob("#{@content_dir}/**/*.md").each do |path|
         str       = path.slice(slicer)
         parts     = str.split('/')
         filename  = parts.pop
@@ -340,5 +341,25 @@ module RTFDoc
 
   def self.markdown_to_html(text)
     renderer.render(text)
+  end
+
+  class WebpackConfig
+    attr_reader :tmp_dir, :js_path, :output_dir, :mode
+
+    def initialize(tmp_dir, js_path, output_dir, mode)
+      @tmp_dir, @js_path, @output_dir, @mode = tmp_dir, js_path, output_dir, mode
+    end
+
+    template = Erubi::Engine.new(File.read(File.expand_path('../src/webpack.config.erb', __dir__)))
+    module_eval <<-RUBY
+      define_method(:output) { #{template.src} }
+    RUBY
+  end
+
+  CONFIG_FILE = 'rtfdoc.conf.js'
+
+  def self.generate_webpack_config(target_dir, *args)
+    content = WebpackConfig.new(*args).output
+    File.open("#{target_dir}/#{CONFIG_FILE}", 'w') { |f| f.write(content) }
   end
 end
