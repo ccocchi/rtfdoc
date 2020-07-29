@@ -328,66 +328,6 @@ module RTFDoc
     end
   end
 
-  class Foo
-    attr_reader :paths, :config
-
-    def initialize(paths)
-      @paths = paths
-      @renderer = Redcarpet::Markdown.new(Renderer, {
-        underline:            true,
-        strikethrough:        true,
-        space_after_headers:  true,
-        fenced_code_blocks:   true,
-        no_intra_emphasis:    true
-      })
-      @config = YAML.load_file('config.yml')
-
-      @output = ""
-      @menu_output = ""
-    end
-
-    DISPATCH = {
-      'Section'   => :_visit_Section,
-      'Resource'  => :_visit_Resource
-    }
-
-    def visit
-      @config['resources'].each do |r|
-        if r.is_a?(String)
-          node = paths.fetch(r)
-          dispatch(node)
-        else
-          res, order = res.each_pair[0]
-          node = paths.fetch(res)
-          raise unless node.is_a?(Resource)
-          _visit_Resource(node, order)
-        end
-      end
-    end
-
-    private
-
-    def dispatch(node, *args)
-      send(DISPATCH[node.class.name], *args)
-    end
-
-    def _visit_Section(s, resource = nil)
-      s.renderer = self.renderer
-      output << s.output
-    ensure
-      s.renderer = nil
-    end
-
-    def _visit_Resource(r, order = nil)
-
-    end
-
-    def _visit_ResourceDesc(rd)
-
-    end
-
-  end
-
   def self.renderer
     @renderer ||= Redcarpet::Markdown.new(Renderer, {
       underline:            true,
@@ -400,29 +340,5 @@ module RTFDoc
 
   def self.markdown_to_html(text)
     renderer.render(text)
-  end
-
-  def self.generate
-    markdown = Redcarpet::Markdown.new(Renderer, {
-      underline:            true,
-      strikethrough:        true,
-      space_after_headers:  true,
-      fenced_code_blocks:   true,
-      no_intra_emphasis:    true
-    })
-    config = YAML.load_file('config.yml')
-
-    hash = Dir.glob('content/**/*.md').each_with_object({}) do |path, res|
-      i = path.rindex('/')
-      filename = path.slice(i + 1, path.length - i - 4)
-      text = File.read(path)
-      res[filename] = Section.new(text, filename, markdown)
-    end
-
-    sections = hash.values_at *config['resources']
-
-    out = File.new(File.expand_path('../src/output.html', __dir__), 'w')
-    out.write(Template.new(sections).output)
-    out.close
   end
 end
