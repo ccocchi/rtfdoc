@@ -1,0 +1,44 @@
+const path = require('path');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+
+module.exports = {
+  mode: "<%= mode %>",
+  entry: "<%= js_path %>",
+  output: {
+    filename: "<%= mode == 'development' ? 'main.js' : 'main.[contenthash].js' %>",
+    path: "<%= output_dir %>",
+  },
+  plugins: [
+    new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      template: '<%= tmp_dir %>/output.html'
+    })
+  ],
+  devtool: "<%= mode == 'development' ? 'inline-source-map' : 'source-map' %>",
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: [
+          <% if mode == 'development' %>
+            "file-loader?name=application.css",
+          <% else %>
+            "file-loader?name=application.[contenthash].css",
+          <% end %>
+          "extract-loader",
+          {
+            loader: "css-loader",
+            options: { sourceMap: true }
+          }
+        ]
+      },
+      {
+        test: /output\.html$/,
+        use: [
+          "html-loader"
+        ]
+      }
+    ]
+  }
+};

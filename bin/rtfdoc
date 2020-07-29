@@ -1,7 +1,54 @@
 #!/usr/bin/env ruby
 
 require_relative '../lib/rtfdoc'
+require 'tmpdir'
+require 'optparse'
 
-RTFDoc::Generator.new.run
+options = {
+  output_dir: File.expand_path('../dist', __dir__),
+  environment: 'development',
+  content_dir: File.expand_path('../content', __dir__),
+  config_file: File.expand_path('../config.yml', __dir__)
+}
 
-# RTFDoc.generate
+OptionParser.new do |opts|
+  opts.on('-o DIR', '--output-dir DIR', "Directory where files we'll be written") do |dir|
+    options[:output_dir] = dir
+  end
+
+  opts.on('-p', '--production', 'Production mode') do
+    options[:environment] = 'production'
+  end
+
+  opts.on('-c CONFIG', '--config-file CONFIG', 'configuration') do |path|
+    options[:config_file] = path
+  end
+
+  opts.on('-C DIR', '--content-dir DIR', 'directory where content will be read from') do |dir|
+    options[:content_dir] = dir
+  end
+end.parse!
+
+css_path = File.expand_path('../src/css/application.scss', __dir__)
+js_path  = File.expand_path('../src/js/index.js', __dir__)
+
+current_dir = File.expand_path('.')
+
+Dir.mktmpdir do |dir|
+  options[:tmp_dir] = dir
+  scss_style    = options[:environment] == 'production' ? 'compressed' : 'nested'
+  scss_content  = File.read(css_path)
+
+  # Compile SCSS to CSS into our temp folder
+  css = SassC::Engine.new(scss_content, { style: scss_style }).render
+  File.open("#{dir}/application.css", 'w') { |f| f.write(css) }
+
+  # Generate HTML from our markdown files into our temp folder
+  RTFDoc::Generator.new(options).run
+
+  # Generate webpack configuration to take into account options, temp folder and current folder
+  # as it seems impossible for `npx` to be runned outside of it since we installed packages
+  # locally.
+  RTFDoc.generate_webpack_config(current_dir, dir, js_path, options[:output_dir], options[:environment])
+  `npx webpack --config #{RTFDoc::CONFIG_FILE} && rm #{RTFDoc::CONFIG_FILE}`
+end
