@@ -1,9 +1,9 @@
 source 'https://rubygems.org'
 
-gem 'erubi'
-gem 'irb'
-gem 'rouge'
-gem 'redcarpet'
-gem 'byebug'
-gem 'benchmark-ips'
-gem 'sassc'
+gemspec
+
+group :development do
+  gem 'benchmark-ips'
+  gem 'byebug'
+  gem 'irb'
+end

@@ -1,5 +1,12 @@
-require 'bundler/setup'
-Bundler.require(:default)
+# require 'bundler/setup'
+# Bundler.require(:default)
+
+require 'erubi'
+require 'rouge'
+require 'redcarpet'
+
+require 'rtfdoc/cli'
+
 
 module RTFDoc
   class AttributesComponent
