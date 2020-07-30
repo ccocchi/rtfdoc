@@ -1,4 +1,5 @@
 import './scroll'
+import '../css/application.scss'
 
 /* Theme switch */
 

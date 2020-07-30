@@ -38,6 +38,17 @@ module.exports = {
         use: [
           "html-loader"
         ]
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          'file-loader?name=[name].css',
+          'extract-loader',
+          // Translates CSS into CommonJS
+          'css-loader',
+          // Compiles Sass to CSS
+          'sass-loader'
+        ]
       }
     ]
   }

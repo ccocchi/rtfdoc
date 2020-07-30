@@ -34,7 +34,7 @@ js_path  = File.expand_path('../src/js/index.js', __dir__)
 
 current_dir = File.expand_path('.')
 
-Dir.mktmpdir do |dir|
+Dir.chdir("#{current_dir}/build") do |dir|
   options[:tmp_dir] = dir
   scss_style    = options[:environment] == 'production' ? 'compressed' : 'nested'
   scss_content  = File.read(css_path)
