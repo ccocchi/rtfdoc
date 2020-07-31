@@ -5,7 +5,7 @@ require "rtfdoc/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "rtfdoc"
-  spec.version       = Rtfdoc::VERSION
+  spec.version       = RTFDoc::VERSION
   spec.authors       = ["ccocchi"]
   spec.email         = ["cocchi.c@gmail.com"]
 
@@ -33,7 +33,7 @@ Gem::Specification.new do |spec|
     `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   end
   spec.bindir        = "bin"
-  spec.executables   = ['rtfdoc', 'doc_cli']
+  spec.executables   = ['rtfdoc']
   spec.require_paths = ["lib"]
 
   spec.add_dependency "erubi", "~> 1.9.0"

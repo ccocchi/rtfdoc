@@ -1,18 +1,42 @@
-require 'thor'
+require 'thor/group'
+require 'fileutils'
 
 module RTFDoc
-  class SubCommandBase < Thor
-  def self.banner(command, namespace = nil, subcommand = false)
-    "#{basename} #{subcommand_prefix} #{command.usage}"
-  end
-
-  def self.subcommand_prefix
-    self.name.gsub(%r{.*::}, '').gsub(%r{^[A-Z]}) { |match| match[0].downcase }.gsub(%r{[A-Z]}) { |match| "-#{match[0].downcase}" }
-  end
-end
-
-  class Bootstrap < SubCommandBase
+  class Bootstrap < Thor::Group
     include Thor::Actions
-    include Thor::Groups
+
+    argument :name, type: :string, desc: 'Name of the directory to bootstrap', required: true
+
+    source_root(File.expand_path('../templates', __dir__))
+
+    def create_root_directory
+      FileUtils.mkdir_p(name)
+    end
+
+    def create_skeleton
+      FileUtils.mkdir_p("#{name}/content")
+      FileUtils.mkdir_p("#{name}/dist")
+      copy_file('gitignore', "#{name}/.gitignore")
+    end
+
+    def create_gemfile
+      template('Gemfile.erb', "#{name}/Gemfile")
+    end
+
+    def create_webpack_config
+      template('package.json.erb', "#{name}/package.json")
+      template('webpack.config.js.erb', "#{name}/webpack.config.js")
+    end
+
+    def create_config
+      template('config.yml.erb', "#{name}/config.yml")
+    end
+
+    private
+
+    def gem_dir
+      File.expand_path('../../../', __dir__)
+    end
+
   end
 end

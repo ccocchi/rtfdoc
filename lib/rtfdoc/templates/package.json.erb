@@ -1,0 +1,20 @@
+{
+  "name": "<%= name %>",
+  "private": true,
+  "devDependencies": {
+    "clean-webpack-plugin": "^3.0.0",
+    "css-loader": "^4.0.0",
+    "html-webpack-plugin": "^4.3.0",
+    "mini-css-extract-plugin": "^0.9.0",
+    "sass": "^1.26.10",
+    "sass-loader": "^9.0.2",
+    "webpack": "^4.44.0",
+    "webpack-cli": "^3.3.12"
+  },
+  "dependencies": {
+    "lodash.throttle": "^4.1.1"
+  },
+  "scripts": {
+    "build": "./bin/rtfdoc convert -c config.yml && npx webpack"
+  }
+}

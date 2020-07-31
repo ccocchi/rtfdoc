@@ -1,12 +1,7 @@
-# require 'bundler/setup'
-# Bundler.require(:default)
-
 require 'erubi'
 require 'rouge'
 require 'redcarpet'
-
-require 'rtfdoc/cli'
-
+require 'tmpdir'
 
 module RTFDoc
   class AttributesComponent
@@ -28,6 +23,14 @@ module RTFDoc
       super
       @rouge_formatter  = Rouge::Formatters::HTML.new
       @rouge_lexer      = Rouge::Lexers::JSON.new
+    end
+
+    def emphasis(text)
+      "<em>#{text}</em>"
+    end
+
+    def double_emphasis(text)
+      "<strong>#{text}</strong>"
     end
 
     def paragraph(text)
@@ -289,10 +292,9 @@ module RTFDoc
   class Generator
     attr_reader :renderer, :config
 
-    def initialize(options)
-      @config       = YAML.load_file(options[:config_file])
-      @content_dir  = options[:content_dir]
-      @output_dir   = options[:tmp_dir]
+    def initialize(config_path)
+      @config       = YAML.load_file(config_path)
+      @content_dir  = @config['content_dir']
       @parts        = {}
     end
 
@@ -310,7 +312,7 @@ module RTFDoc
         end
       end
 
-      out = File.new("#{@output_dir}/output.html", 'w')
+      out = File.new("#{Dir.tmpdir}/rtfdoc_output.html", 'w')
       out.write(Template.new(nodes).output)
       out.close
     end
@@ -348,25 +350,5 @@ module RTFDoc
 
   def self.markdown_to_html(text)
     renderer.render(text)
-  end
-
-  class WebpackConfig
-    attr_reader :tmp_dir, :js_path, :output_dir, :mode
-
-    def initialize(tmp_dir, js_path, output_dir, mode)
-      @tmp_dir, @js_path, @output_dir, @mode = tmp_dir, js_path, output_dir, mode
-    end
-
-    template = Erubi::Engine.new(File.read(File.expand_path('../src/webpack.config.erb', __dir__)))
-    module_eval <<-RUBY
-      define_method(:output) { #{template.src} }
-    RUBY
-  end
-
-  CONFIG_FILE = 'rtfdoc.conf.js'
-
-  def self.generate_webpack_config(target_dir, *args)
-    content = WebpackConfig.new(*args).output
-    File.open("#{target_dir}/#{CONFIG_FILE}", 'w') { |f| f.write(content) }
   end
 end
