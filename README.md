@@ -1,38 +1,30 @@
-# Rtfdoc
+# RTFDoc
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/rtfdoc`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Generate beautiful static documentation for your APIs.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+You can install the gem globally using the following command. It will install the `rtfdoc` binary for generating new projects from scratch.
 
-```ruby
-gem 'rtfdoc'
 ```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install rtfdoc
+$ gem install rtfdoc
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+You can scaffold a new project using `rtfdoc bootstrap <project_name>`. It will create a skeleton for your project, and generate needed configuration files.
 
-## Development
+Once in your project directory, you can install ruby dependencies using `bundle install` and javascript dependencies using `yarn install`.
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+By convention, you should put your documentation content under the `content/` directory. If you don't follow this convention, don't forget to modify the configuration file as well.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+When you're done writing your documentation, you can define the order they will appear on your page using the ` config.yml` file (see `examples/`).
+
+Finally, you can use `yarn run build` to generate the HTML/CSS/JS files.
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/rtfdoc. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/ccocchi/rtfdoc. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 
@@ -40,4 +32,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the Rtfdoc project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/rtfdoc/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the RTFDoc project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/ccocchi/rtfdoc/blob/master/CODE_OF_CONDUCT.md).
