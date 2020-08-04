@@ -91,14 +91,23 @@ module RTFDoc
       if language == 'attributes' || language == 'parameters'
         AttributesComponent.new(code, language).output
       elsif language == 'response'
-        <<-HTML
-        <div class="section-response">
-          <div class="response-topbar">RESPONSE</div>
-          <pre><code>#{rouge_formatter.format(rouge_lexer.lex(code.strip))}</code></pre>
-        </div>
-        HTML
+        format_code('RESPONSE', code)
+      elsif language == 'title_and_code'
+        title, _code = code.split("\n", 2)
+        title ||= 'RESPONSE'
+        format_code(title, _code)
       end
     end
+
+    private def format_code(title, code)
+      <<-HTML
+      <div class="section-response">
+        <div class="response-topbar">#{title}</div>
+        <pre><code>#{rouge_formatter.format(rouge_lexer.lex(code.strip))}</code></pre>
+      </div>
+      HTML
+    end
+
   end
 
   class Template
@@ -157,7 +166,7 @@ module RTFDoc
         parse_metadata(YAML.load(raw_content.slice!(0, idx + 3)))
       end
 
-      raise 'missing metadata' if resource && !@path && !@method
+      raise 'missing metadata' if resource && !meta_section? && !@path && !@method
 
       @content, @example = raw_content.split('$$$')
     end
@@ -179,17 +188,28 @@ module RTFDoc
     end
 
     def signature
-      sig = <<-HTML.strip!
+      anchor(sig)
+    end
+
+    def example_to_html
+      res = super
+      @resource && res && !meta_section? ? res.sub('RESPONSE', sig) : res
+    end
+
+    private
+
+    def sig
+      @sig ||= <<-HTML.strip!
         <div class="endpoint-def">
           <div class="method method__#{method.downcase}">#{method.upcase}</div>
           <div class="path">#{path}</div>
         </div>
       HTML
-
-      anchor(sig)
     end
 
-    private
+    def meta_section?
+      name == 'desc' || name == 'object'
+    end
 
     def menu_title
       @menu_title || name.capitalize
