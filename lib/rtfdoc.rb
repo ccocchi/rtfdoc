@@ -3,6 +3,8 @@ require 'rouge'
 require 'redcarpet'
 require 'tmpdir'
 
+require 'rtfdoc/version'
+
 module RTFDoc
   class AttributesComponent
     def initialize(raw_attrs, title)
