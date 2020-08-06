@@ -25,18 +25,11 @@ module RTFDoc
 
     def create_webpack_config
       template('package.json.erb', "#{name}/package.json")
-      template('webpack.config.js.erb', "#{name}/webpack.config.js")
+      copy_file('webpack.config.js', "#{name}/webpack.config.js")
     end
 
     def create_config
       template('config.yml.erb', "#{name}/config.yml")
     end
-
-    private
-
-    def gem_dir
-      File.expand_path('../../../', __dir__)
-    end
-
   end
 end

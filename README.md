@@ -14,7 +14,8 @@ $ gem install rtfdoc
 
 You can scaffold a new project using `rtfdoc bootstrap <project_name>`. It will create a skeleton for your project, and generate needed configuration files.
 
-Once in your project directory, you can install ruby dependencies using `bundle install` and javascript dependencies using `yarn install`.
+Once in your project directory, you can install ruby dependencies using `bundle install` and javascript dependencies using `yarn install`. Then we want to stub the binary by running `bundle binstubs bundler rtfdoc`.
+And finally, you'll copy the assets source by running `bin/rtfdoc install`.
 
 By convention, you should put your documentation content under the `content/` directory. If you don't follow this convention, don't forget to modify the configuration file as well.
 
