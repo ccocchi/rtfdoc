@@ -111,9 +111,13 @@ module RTFDoc
   end
 
   class Template
-    def initialize(sections)
-      @content = sections.map(&:output).join
+    attr_reader :app_name, :page_title
+
+    def initialize(sections, config)
+      @content      = sections.map(&:output).join
       @menu_content = sections.map(&:menu_output).join
+      @app_name     = config['app_name']
+      @page_title   = config['title']
     end
 
     def output
@@ -335,7 +339,7 @@ module RTFDoc
       end
 
       out = File.new("#{Dir.tmpdir}/rtfdoc_output.html", 'w')
-      out.write(Template.new(nodes).output)
+      out.write(Template.new(nodes, config).output)
       out.close
     end
 
