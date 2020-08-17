@@ -544,7 +544,7 @@ p code {
   border: 1px solid var(--inline-code-border);
   padding: 2px 3px 0;
   margin: 0 1px;
-  font-size: 15px;
+  font-size: var(--code-font-size);
   font-family: var(--monospace-font);
   font-weight: 500;
   background: var(--inline-code-background); }
