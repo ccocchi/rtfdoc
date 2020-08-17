@@ -37,7 +37,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "erubi", "~> 1.9.0"
-  spec.add_dependency "rouge", "~> 3.20.0"
+  spec.add_dependency "rouge", "~> 3.22.0"
   spec.add_dependency "redcarpet", "~> 3.5.0"
   spec.add_dependency "thor", "~> 1.0.1"
 
