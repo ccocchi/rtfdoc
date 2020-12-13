@@ -406,8 +406,6 @@ ul {
     border-radius: 8px 8px 0 0;
     text-transform: uppercase;
     overflow-y: auto;
-
-    .endpoint-def .method { width: auto }
   }
 
   p {
@@ -428,6 +426,8 @@ ul {
   }
 }
 
+
+
 .endpoint-def {
   display: flex;
   flex-direction: row;
@@ -439,8 +439,6 @@ ul {
 
   .method {
     text-align: right;
-    width: 55px;
-    min-width: 55px;
     margin-right: 7px;
     text-transform: uppercase;
   }
@@ -466,6 +464,11 @@ ul {
   }
   a:hover .path {
     color: var(--endpoints-def-hover-color);
+  }
+
+  .resource-sig .method {
+    width: 55px;
+    min-width: 55px;
   }
 }
 
