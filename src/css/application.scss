@@ -17,6 +17,7 @@
   --content-width: calc(100vw - var(--sidebar-width));
   --section-padding: 5vw;
   --example-width: 40vw;
+  --max-example-width: 31vw;
   --sp20: 20px;
   --sp24: 24px;
   --monospace-font: "SFMono-Regular", "Consolas", "Menlo", monospace;
@@ -30,6 +31,7 @@
   --table-font-size: 14px;
   --table-line-height: 18px;
   --code-font-size: 14px;
+  --code-block-font-size: 13px;
 }
 
 * {
@@ -151,26 +153,69 @@ body[data-theme="light"] {
 }
 
 .sidebar-nav {
-  margin-top: 16px; }
-  .sidebar-nav a {
-    text-decoration: none;
-    color: var(--nav-color);
-    transition: color .2s ease;
-    font-size: var(--nav-font-size);
-    font-weight: 500;
-    display: block;
-    padding: 5px 16px; }
-    .sidebar-nav a:hover {
-      color: var(--nav-hover-color); }
-  .sidebar-nav a.current span {
-    border-bottom: 2px solid var(--brand-color); }
-  .sidebar-nav li > ul {
-    display: none;
-    padding-left: 16px;
-    transition: all 2s ease; }
-  .sidebar-nav li.expanded > ul,
-  .sidebar-nav li.current > ul {
-    display: block; }
+  margin-top: 16px;
+  width: 100%;
+  max-height: 570px;
+  overflow-y: scroll;
+}
+
+.sidebar-nav-group {
+  padding-bottom: 12px;
+
+  h5 {
+    text-transform: uppercase;
+    margin: 0;
+    padding: 16px 16px 5px 16px;
+    color: var(--title-color);
+    font-size: 13px;
+    font-weight: 600;
+  }
+}
+
+.sidebar-nav a {
+  text-decoration: none;
+  color: var(--nav-color);
+  transition: color .2s ease;
+  font-size: var(--nav-font-size);
+  font-weight: 500;
+  display: block;
+  padding: 5px 16px;
+}
+
+.sidebar-nav a:hover {
+  color: var(--nav-hover-color);
+}
+
+.sidebar-nav a.current span {
+  border-bottom: 2px solid var(--brand-color);
+}
+
+.sidebar-nav li > ul {
+  display: none;
+  padding-left: 16px;
+  transition: all 2s ease;
+}
+
+.sidebar-nav li.expanded {
+  margin-bottom: 10px;
+}
+
+.sidebar-nav li.expanded > ul,
+.sidebar-nav li.current > ul {
+  display: block;
+}
+
+.sidebar-nav li > ul.scoped {
+  display: block;
+}
+
+.sidebar-nav .scope-title {
+  font-size: 13px;
+  color: var(--title-color);
+  text-transform: uppercase;
+  font-weight: 400;
+  padding: 10px 0 3px 16px;
+}
 
 /*Simple css to style it like a toggle switch*/
 .theme-switch-wrapper {
@@ -309,7 +354,7 @@ section > section .section-divider {
   align-self: flex-start;
   top: 0;
   flex-grow: 1;
-  max-width: 600px;
+  max-width: var(--max-example-width);
   padding-top: calc(40px + var(--sp20)); }
 
 p {
@@ -345,7 +390,10 @@ ul {
   border-radius: 8px;
   box-shadow: 0 0 0 1px var(--response-shadow-color);
   max-height: 83vh;
-  overflow-y: auto;
+  overflow: hidden;
+  margin-bottom: 24px;
+
+  &:last-child { margin-bottom: 0 }
 
   .response-topbar {
     background: var(--block-header-background-color);
@@ -355,6 +403,7 @@ ul {
     color: var(--response-header-color);
     border-radius: 8px 8px 0 0;
     text-transform: uppercase;
+    overflow-y: auto;
 
     .endpoint-def .method { width: auto }
   }
@@ -372,6 +421,8 @@ ul {
     font-size: var(--code-font-size);
     font-weight: 400;
     line-height: 18px;
+    max-height: 75vh;
+    overflow: auto;
   }
 }
 
@@ -550,6 +601,11 @@ p code {
   background: var(--inline-code-background); }
 
 /** Code highlighting **/
+pre code {
+  font-family: var(--monospace-font);
+  font-size: var(--code-block-font-size);
+}
+
 pre code,
 pre code .w {
   color: var(--code-color); }

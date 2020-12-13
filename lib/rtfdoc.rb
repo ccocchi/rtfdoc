@@ -113,16 +113,48 @@ module RTFDoc
   class Template
     attr_reader :app_name, :page_title
 
-    def initialize(sections, config)
-      @content      = sections.map(&:output).join
-      @menu_content = sections.map(&:menu_output).join
+    def initialize(nodes, config)
+      @content      = nodes.flat_map(&:output).join
+      # @menu_content = nodes.map(&:menu_output).join
       @app_name     = config['app_name']
       @page_title   = config['title']
+
+      generate_grouped_menu_content(nodes)
     end
 
     def output
       template = Erubi::Engine.new(File.read(File.expand_path('../src/index.html.erb', __dir__)))
       eval(template.src)
+    end
+
+    private
+
+    # Transform a list of nodes into a list of groups. If all nodes already are groups, it will
+    # return the same list. Otherwise, it will build group from consecutives single resources.
+    def generate_grouped_menu_content(nodes)
+      i   = 0
+      res = []
+
+      while i < nodes.length
+        node = nodes[i]
+        if node.is_a?(Group)
+          res << node
+          i += 1
+        else
+          inner = []
+          j = i
+          while node && !node.is_a?(Group)
+            inner << node
+            j += 1
+            node = nodes[j]
+          end
+
+          res << Group.new(nil, inner)
+          i = j
+        end
+      end
+
+      @menu_content = res.map(&:menu_output).join
     end
   end
 
@@ -247,16 +279,18 @@ module RTFDoc
     end
 
     def generate_example(sections)
-      endpoints   = sections.reject { |s| s.name == 'desc' || s.name == 'object' }
+      endpoints   = sections.reject { |s| s.is_a?(Scope) || s.name == 'desc' || s.name == 'object' }
       signatures  = endpoints.each_with_object("") do |e, res|
         res << %(<div class="resource-sig">#{e.signature}</div>)
       end
+      scopes = sections.select { |s| s.is_a?(Scope) }.map!(&:generate_example).join("\n")
 
       @example = <<-HTML
       <div class="section-response">
         <div class="response-topbar">ENDPOINTS</div>
         <div class="section-endpoints">#{signatures}</div>
       </div>
+      #{scopes}
       HTML
     end
 
@@ -273,6 +307,25 @@ module RTFDoc
       desc = nil
 
       sections = endpoints.each_with_object([]) do |endpoint, res|
+        if endpoint.is_a?(Hash)
+          n, values = endpoint.each_pair.first
+          next unless n.start_with?('scope|')
+          dir_name = n.slice(6..-1)
+
+          scope_name = values['title'] || dir_name
+          scoped_endpoints = values['endpoints']
+
+          subsections = scoped_endpoints.each_with_object([]) do |e, r|
+            filename = paths.dig(dir_name, e)
+            next unless filename
+            content  = File.read(filename)
+            r << Section.new(e, content, resource: name)
+          end
+
+          res << Scope.new(scope_name, subsections)
+          next res
+        end
+
         filename = paths[endpoint]
         next unless filename
 
@@ -300,7 +353,7 @@ module RTFDoc
       head, *tail = sections
       head.include_show_button = true
 
-      inner = sections.map(&:output).join("\n")
+      inner = sections.flat_map(&:output).join("\n")
       %(<section class="head-section">#{inner}</section>)
     end
 
@@ -315,6 +368,65 @@ module RTFDoc
     end
   end
 
+  class Group
+    attr_reader :name, :resources
+
+    def initialize(name, resources)
+      @name       = name
+      @resources  = resources
+    end
+
+    def output
+      resources.map(&:output)
+    end
+
+    def menu_output
+      title = "<h5 class=\"nav-group-title\">#{name}</h5>" if name
+
+      <<-HTML
+        <div class="sidebar-nav-group">
+          #{title}
+          <ul>#{resources.map(&:menu_output).join}</ul>
+        </div>
+      HTML
+    end
+  end
+
+  class Scope
+    attr_reader :name, :sections
+
+    def initialize(name, sections)
+      @name       = name
+      @sections   = sections
+    end
+
+    def output
+      sections.map(&:output)
+    end
+
+    def menu_output
+      <<-HTML
+        <li>
+          <div class="scope-title">#{name}</div>
+          <ul class="scoped">#{sections.map(&:menu_output).join}</ul>
+        </li>
+      HTML
+    end
+
+    def generate_example
+      signatures  = sections.each_with_object("") do |s, res|
+        res << %(<div class="resource-sig">#{s.signature}</div>)
+      end
+
+      <<-HTML
+      <div class="section-response">
+        <div class="response-topbar">#{name} ENDPOINTS</div>
+        <div class="section-endpoints">#{signatures}</div>
+      </div>
+      HTML
+    end
+  end
+
   class Generator
     attr_reader :renderer, :config
 
@@ -325,18 +437,8 @@ module RTFDoc
     end
 
     def run
-      tree = build_content_tree
-
-      nodes = config['resources'].map do |rs|
-        if rs.is_a?(Hash)
-          name, endpoints = rs.each_pair.first
-          paths = tree[name]
-          Resource.build(name, paths, endpoints: endpoints)
-        else
-          paths = tree[rs]
-          paths.is_a?(Hash) ? Resource.build(rs, paths) : Section.new(rs, File.read(paths))
-        end
-      end
+      @tree = build_content_tree
+      nodes = build_nodes(config['resources'])
 
       out = File.new("#{Dir.tmpdir}/rtfdoc_output.html", 'w')
       out.write(Template.new(nodes, config).output)
@@ -344,6 +446,27 @@ module RTFDoc
     end
 
     private
+
+    def build_nodes(ary, allow_groups: true)
+      ary.map do |rs|
+        if rs.is_a?(Hash)
+          name, values = rs.each_pair.first
+
+          if name.start_with?('group|')
+            raise 'Nested groups are not yet supported' if !allow_groups
+
+            group_name = values['title'] || name.slice(6..-1)
+            Group.new(group_name, build_nodes(values['resources'], allow_groups: false))
+          else
+            paths = @tree[name]
+            Resource.build(name, paths, endpoints: values)
+          end
+        else
+          paths = @tree[rs]
+          paths.is_a?(Hash) ? Resource.build(rs, paths) : Section.new(rs, File.read(paths))
+        end
+      end
+    end
 
     def build_content_tree
       tree        = {}
