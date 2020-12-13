@@ -7,6 +7,16 @@ require 'rtfdoc/version'
 
 module RTFDoc
   class AttributesComponent
+    # Needed because we can't call the same rendered within itself.
+    def self.private_renderer
+      @renderer ||= Redcarpet::Markdown.new(::RTFDoc::Renderer, {
+        underline:            true,
+        space_after_headers:  true,
+        fenced_code_blocks:   true,
+        no_intra_emphasis:    true
+      })
+    end
+
     def initialize(raw_attrs, title)
       @attributes = YAML.load(raw_attrs)
       @title      = title
@@ -16,6 +26,10 @@ module RTFDoc
     class_eval <<-RUBY
       define_method(:output) { #{template.src} }
     RUBY
+
+    def to_html(text)
+      self.class.private_renderer.render(text) if text
+    end
   end
 
   class Renderer < Redcarpet::Render::Base
@@ -381,7 +395,7 @@ module RTFDoc
     end
 
     def menu_output
-      title = "<h5 class=\"nav-group-title\">#{name}</h5>" if name
+      title = "<h5 class=\"nav-group-title\">#{name}</h5>" if name && name.length > 0
 
       <<-HTML
         <div class="sidebar-nav-group">
@@ -455,7 +469,7 @@ module RTFDoc
           if name.start_with?('group|')
             raise 'Nested groups are not yet supported' if !allow_groups
 
-            group_name = values['title'] || name.slice(6..-1)
+            group_name = values.key?('title') ? values['title'] : name.slice(6..-1)
             Group.new(group_name, build_nodes(values['resources'], allow_groups: false))
           else
             paths = @tree[name]

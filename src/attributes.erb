@@ -11,7 +11,7 @@
         <% end %>
       </div>
       <div class="list-item-description">
-        <p><%= hash['desc'] %></p>
+        <%= to_html(hash['desc']) %>
       </div>
       <% if hash['children']&.any? %>
         <div class="section-list section-list-child">
