@@ -53,6 +53,10 @@ module RTFDoc
       "<p>#{text}</p>"
     end
 
+    def link(link, title, content)
+      %(<a title="#{title}" href="#{link}">#{content}</a>)
+    end
+
     def header(text, level)
       if level == 4
         %(<div class="header-table">#{text}</div>)
@@ -453,8 +457,6 @@ module RTFDoc
       @content_dir  = @config['content_dir']
       @parts        = {}
     end
-
-    require 'byebug'
 
     def run
       @tree = build_content_tree
