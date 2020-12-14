@@ -405,7 +405,8 @@ ul {
     color: var(--response-header-color);
     border-radius: 8px 8px 0 0;
     text-transform: uppercase;
-    overflow-y: auto;
+
+    .endpoint-def { overflow-y: auto; }
   }
 
   p {
