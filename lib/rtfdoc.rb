@@ -385,9 +385,13 @@ module RTFDoc
   class Group
     attr_reader :name, :resources
 
-    def initialize(name, resources)
+    def initialize(name, resources, options = {})
       @name       = name
       @resources  = resources
+
+      sorted = true
+      sorted = options['sort'] if options.key?('sort')
+      @resources.sort! { |a, b| a.name <=> b.name } if sorted
     end
 
     def output
@@ -450,6 +454,8 @@ module RTFDoc
       @parts        = {}
     end
 
+    require 'byebug'
+
     def run
       @tree = build_content_tree
       nodes = build_nodes(config['resources'])
@@ -470,7 +476,7 @@ module RTFDoc
             raise 'Nested groups are not yet supported' if !allow_groups
 
             group_name = values.key?('title') ? values['title'] : name.slice(6..-1)
-            Group.new(group_name, build_nodes(values['resources'], allow_groups: false))
+            Group.new(group_name, build_nodes(values['resources'], allow_groups: false), values)
           else
             paths = @tree[name]
             Resource.build(name, paths, endpoints: values)
