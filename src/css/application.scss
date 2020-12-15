@@ -17,7 +17,7 @@
   --content-width: calc(100vw - var(--sidebar-width));
   --section-padding: 5vw;
   --example-width: 40vw;
-  --max-example-width: 31vw;
+  --max-example-width: 33vw;
   --sp20: 20px;
   --sp24: 24px;
   --monospace-font: "SFMono-Regular", "Consolas", "Menlo", monospace;
@@ -228,7 +228,7 @@ a:hover {
   color: var(--scoped-endpoints-title-color);
   text-transform: uppercase;
   font-weight: 400;
-  padding: 10px 0 3px 16px;
+  padding: 8px 0 3px 16px;
 }
 
 /*Simple css to style it like a toggle switch*/
@@ -375,7 +375,7 @@ section > section .section-divider {
   padding-top: calc(40px + var(--sp20)); }
 
 p {
-  margin-top: var(--sp20);
+  margin-top: 16px;
   font-size: var(--main-font-size);
   line-height: var(--main-line-height);
   font-weight: 400;
@@ -488,26 +488,20 @@ ul {
   }
 }
 
-h3 {
-  margin-top: 20px;
-  padding-top: 16px;
-}
 
-h3,
-.section-list .section-list-title {
+h3 {
   font-size: 16px;
   font-weight: 500;
-  padding-bottom: 12px;
+  padding: 24px 0 10px;
   border-bottom: 1px solid var(--divider-color);
   display: flex;
   align-items: baseline;
   color: var(--title-color);
   margin: 0;
-  margin-top: var(--sp20);
-  width: 100%; }
+  margin-top: 16px;
+  width: 100%;
+}
 
-.section-list {
-  margin-top: 32px; }
   .section-list .list-item {
     padding-top: 16px;
     padding-bottom: 15px;
