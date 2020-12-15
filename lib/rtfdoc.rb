@@ -379,10 +379,16 @@ module RTFDoc
       head, *tail = sections
       <<-HTML
         <li data-anchor="#{name}">
-          #{head.anchor(name.capitalize, class_list: 'expandable')}
+          #{head.anchor(human_name, class_list: 'expandable')}
           <ul>#{tail.map(&:menu_output).join}</ul>
         </li>
       HTML
+    end
+
+    private
+
+    def human_name
+      name.tr('_', ' ').split.map!(&:capitalize).join(' ')
     end
   end
 
