@@ -12,7 +12,7 @@
       <div class="list-item-description">
         <%= to_html(hash['desc']) %>
       </div>
-      <% if hash['children']&.any? %>
+      <% if hash.key?('children') || hash.key?('after_children') %>
         <div class="section-list section-list-child">
           <h5
             class="section-list-title section-list-title-child"
@@ -26,7 +26,7 @@
             <span>Show child attributes</span>
           </h5>
           <ul class="child-list hidden">
-            <% hash['children'].each do |child_name, child_hash| %>
+            <% Array(hash['children']).each do |child_name, child_hash| %>
               <li class="list-item">
                 <div class="list-item-label">
                   <div class="list-item-name"><%= child_name %></div>
@@ -36,6 +36,13 @@
                   <%= to_html(child_hash['desc']) %>
                 </div>
               </li>
+            <% end %>
+            <% if (str = hash['after_children']) %>
+            <li class="list-item">
+              <div class="list-item-description">
+                <%= to_html(str) %>
+              </div>
+            </li>
             <% end %>
           </ul>
         </div>

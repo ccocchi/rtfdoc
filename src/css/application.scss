@@ -556,7 +556,9 @@ h3 {
       cursor: pointer;
       color: var(--child-list-title-hover-color); }
     .section-list .section-list-title-child.child-revealed {
-      border-bottom: 1px solid var(--divider-color); }
+      border-bottom: 1px solid var(--divider-color);
+      width: 100%;
+    }
       .section-list .section-list-title-child.child-revealed .svg-plus {
         transform: rotate(45deg); }
     .section-list .section-list-title-child .svg-plus {
